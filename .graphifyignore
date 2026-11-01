@@ -1,0 +1,10 @@
+.venv/
+data/
+graphify-out/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+.terraform/
+docs/evidence/
+tests/fixtures/
+CLAUDE.md

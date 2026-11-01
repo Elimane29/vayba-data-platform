@@ -1,0 +1,24 @@
+name: vayba_dbt
+version: "1.0.0"
+config-version: 2
+profile: vayba
+require-dbt-version: [">=1.11.0", "<1.12.0"]
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+models:
+  vayba_dbt:
+    silver:
+      +schema: SILVER
+      +materialized: view
+    gold:
+      +schema: GOLD
+      +materialized: table
+
+on-run-end:
+  - "{{ log_run_results(results) }}"

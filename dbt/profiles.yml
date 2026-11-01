@@ -1,0 +1,13 @@
+vayba:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_FILE') }}"
+      role: SYSADMIN
+      warehouse: VAYBA_WH
+      database: VAYBA
+      schema: SILVER
+      threads: 4

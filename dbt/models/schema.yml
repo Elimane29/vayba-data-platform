@@ -1,0 +1,20 @@
+version: 2
+models:
+  - name: silver_listens
+    columns:
+      - name: listen_key
+        data_tests: [not_null, unique]
+      - name: user_key
+        data_tests: [not_null]
+      - name: listened_at
+        data_tests: [not_null]
+  - name: silver_artists
+    columns:
+      - name: artist_mbid
+        data_tests: [not_null, unique]
+  - name: playlist_hebdo
+    columns:
+      - name: recording_mbid
+        data_tests: [not_null]
+      - name: artist_name
+        data_tests: [not_null]

@@ -20,6 +20,8 @@ WEEK = "{{ params.week or data_interval_start.start_of('week').to_date_string() 
 ENV = {
     "SNOWFLAKE_ACCOUNT": os.environ["SNOWFLAKE_ACCOUNT"],
     "SNOWFLAKE_USER": os.environ["SNOWFLAKE_USER"],
+    "SNOWFLAKE_ROLE": os.environ["SNOWFLAKE_ROLE"],  # personal role: members do not have SYSADMIN
+    "SNOWFLAKE_WAREHOUSE": os.environ["SNOWFLAKE_WAREHOUSE"],
     "SNOWFLAKE_PRIVATE_KEY_FILE": "/secrets/snowflake/rsa_key.p8",
     "GCS_BUCKET": os.environ["GCS_BUCKET"],
     "GOOGLE_CLOUD_PROJECT": os.environ["GCP_PROJECT"],

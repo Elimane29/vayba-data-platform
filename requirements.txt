@@ -1,2 +1,5 @@
 dbt-core==1.11.16
 dbt-snowflake==1.11.6
+# ingestion (part 1): same connector version dbt-snowflake 1.11.6 installs, so no conflict
+snowflake-connector-python==4.8.0
+google-cloud-storage==3.17.1

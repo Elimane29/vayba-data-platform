@@ -1,0 +1,4 @@
+project_id = "your-gcp-project-id"
+uploaders  = ["user:yanis@example.com", "user:you@example.com"]
+readers    = ["user:hugo@example.com"]
+# snowflake_service_account = "xxxx@xxxx.iam.gserviceaccount.com"

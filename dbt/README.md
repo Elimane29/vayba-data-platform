@@ -10,6 +10,8 @@ La source reste `VAYBA.DEV_HUGO_BRONZE`. Les résultats validés de ce lancement
 
 ```bash
 python -m pip install dbt-core==1.11.16 dbt-snowflake==1.11.6 -r dbt/requirements-local.txt
+gzip -dc tests/fixtures/listens_raw.jsonl.gz > tests/fixtures/listens_raw.jsonl
+gzip -dc tests/fixtures/mb_artists_raw.jsonl.gz > tests/fixtures/mb_artists_raw.jsonl
 python dbt/tools/load_fixtures.py --fixtures tests/fixtures
 dbt build --project-dir dbt --profiles-dir dbt --target local
 python dbt/tools/check_pipeline.py --fixtures tests/fixtures

@@ -15,7 +15,7 @@ terraform {
   # Remote state: shared by the team, versioned and locked by GCS.
   # This bucket is created once by hand (it must exist before Terraform can use it).
   backend "gcs" {
-    bucket = "iconic-ruler-513415-p0-tfstate"
+    bucket = "vayba-elimane-2026-tfstate"
     prefix = "vayba"
   }
 }

@@ -5,21 +5,30 @@ Sections marked **TO RUN** still need a real run on the shared Snowflake account
 
 ## 1. Architecture in one line
 
-Public APIs → `ingestion/run.py` (container) → GCS bucket `iconic-ruler-513415-p0-landing` → `COPY INTO`
+Public APIs → `ingestion/run.py` (container) → GCS bucket `vayba-elimane-2026-landing` → `COPY INTO`
 Snowflake `VAYBA.BRONZE` → dbt (`SILVER`, `GOLD`) → Dash. Airflow runs it every Monday at 06:00 Europe/Paris.
+
+Location: the Snowflake account (`BDAEQII-UXB40510`) runs on AWS `us-west-2` (Oregon), so the bucket is in GCP
+`us-west1` (Oregon), next to it. A real European company would pick a European region for both (GDPR).
 
 ## 2. Prerequisites
 
-| What | Where | Manual step? |
-|---|---|---|
-| GCP project `iconic-ruler-513415-p0`, budget alert | GCP console | Yes, once |
-| Terraform state bucket `iconic-ruler-513415-p0-tfstate` (versioned) | `gcloud`, see `terraform/` | Yes, once |
-| Landing bucket, its access, Snowflake read role | `terraform/main.tf` | No: `terraform apply` |
-| Storage integration, stage, bronze tables | `ingestion/sql/setup_bronze.sql` | Yes, once (ACCOUNTADMIN) |
-| Snowflake user with an RSA public key | Snowflake account owner | Yes, once per member |
-| `.env` (root) and `airflow/.env` | from the `.env.example` files | Yes, never committed |
+| What | Where | Owner | Manual step? |
+|---|---|---|---|
+| GCP project `vayba-elimane-2026` (no organization), budget alert | GCP console | Elimane | Yes, once |
+| Terraform state bucket `vayba-elimane-2026-tfstate` (versioned) | `gcloud`, see `terraform/` | Elimane | Yes, once |
+| Landing bucket, its access, Snowflake read role | `terraform/main.tf` | Elimane | No: `terraform apply` |
+| Storage integration `VAYBA_GCS_INT` | `ingestion/sql/setup_bronze.sql` part 1 | Hugo (ACCOUNTADMIN) | Yes, once |
+| Stage `LANDING_GCS`, bronze tables | `ingestion/sql/setup_bronze.sql` part 2 | Hugo | Yes, once per bronze schema |
+| Snowflake user and role per member, RSA public key | Snowflake account owner | Hugo | Yes, once per member |
+| `.env` (root) and `airflow/.env` | from the `.env.example` files | each member | Yes, never committed |
 
 Each member signs in to GCP with their own account (`gcloud auth application-default login`). No service account key exists.
+The GCP project sits outside the school's Google organization on purpose: its *Domain Restricted Sharing* policy
+rejects Snowflake's service account (error 412).
+
+Members have personal Snowflake roles (`VAYBA_ELIMANE`, `VAYBA_YANIS`), not `SYSADMIN`. Airflow runs with Elimane's
+user and role, so that role must be able to use `VAYBA_WH` and the stage, and write `BRONZE`, `SILVER` and `GOLD`.
 
 ## 3. Launch
 
@@ -57,7 +66,7 @@ SELECT WEEK_START, COUNT(*) FROM VAYBA.GOLD.PLAYLIST_HEBDO GROUP BY 1 ORDER BY 1
 3. Run the queries again: counts must be identical, duplicates must stay at 0.
 
 Why it holds: for a given week, `run.py` replaces the week's GCS files and deletes then reloads the week's bronze
-rows in one transaction; `COPY INTO` skips files it already loaded; silver deduplicates listens.
+rows in one transaction; `COPY INTO` skips files it already loaded. Silver deduplication: to confirm with part 2.
 
 | Run | Listens in bronze | Duplicates | Playlist rows | Date |
 |---|---|---|---|---|
@@ -70,9 +79,21 @@ Note: counts can legitimately grow between two runs hours apart, because late li
 ## 6. Incident 1, tested: a file loaded twice — TO RUN
 
 **Scenario:** someone reloads a week by hand with `FORCE = TRUE`, bypassing the pipeline. Every task stays green,
-but listens are counted twice.
+and bronze now holds every listen twice.
 
-**Trigger it** (on a `DEV_*_BRONZE` schema, never on shared `BRONZE`):
+**Expected result:** the duplicates stay in bronze, but they never reach the business numbers. Part 2 deduplicates in
+`listens_checked`, before silver, and a `unique` test on `silver_listens.listen_key` guards the output: silver and
+gold stay identical. Measured locally by part 2 (DuckDB, one duplicated row): bronze 6,652 → 6,653 rows, silver stays
+at 6,125 unique listens, gold unchanged. To reproduce on Snowflake through the orchestrated chain.
+
+**Before:** `DEV_ELIMANE_BRONZE` must exist with its stage and tables (`setup_bronze.sql` part 2 with
+`BRONZE_SCHEMA = 'DEV_ELIMANE_BRONZE'`), loaded once:
+
+```bash
+VAYBA_BRONZE_SCHEMA=DEV_ELIMANE_BRONZE python ingestion/run.py --source listenbrainz --week 2026-10-26
+```
+
+**Trigger it** (on the `DEV_*_BRONZE` schema, never on shared `BRONZE`):
 
 ```sql
 COPY INTO DEV_ELIMANE_BRONZE.LISTENS_RAW (RAW, _SOURCE_FILE, _BATCH_ID, _LOADED_AT)
@@ -81,20 +102,27 @@ FROM (SELECT $1, METADATA$FILENAME, 'incident-double-load', CURRENT_TIMESTAMP()
 FORCE = TRUE;
 ```
 
-**Detect it:** the duplicate check above returns more than 0, and the dbt tests on the listens fail, so
-`dbt build` skips gold: the wrong numbers never reach the playlists.
+**Detect it:** the duplicate check of section 4, run on `DEV_ELIMANE_BRONZE.LISTENS_RAW`, returns more than 0.
+dbt tests still pass: that is expected, the duplicates were removed before silver.
 
-**Recover:** rerun the week through the pipeline (`python ingestion/run.py --source listenbrainz --week 2026-10-26`,
-or the DAG with `week`). It deletes the week's rows and reloads each file once. The check returns 0 again.
+**Demonstrated test failure (C6), separate from this incident:** in a test copy, remove one MusicBrainz artist
+reference; the `no_unknown_artists` test fails and `dbt build` stops before gold.
+
+**Recover:** rerun the week through the pipeline, **on the same schema**:
+
+```bash
+VAYBA_BRONZE_SCHEMA=DEV_ELIMANE_BRONZE python ingestion/run.py --source listenbrainz --week 2026-10-26
+```
+
+It deletes the week's rows and reloads each file once. The check returns 0 again.
 
 **Prevent:** loads only go through `run.py`; shared `BRONZE` is written by the pipeline only.
 
-| Step | Result | Date |
-|---|---|---|
-| Duplicates before | | |
-| Duplicates after the forced load | | |
-| `dbt build` result | | |
-| Duplicates after recovery | | |
+| Step | Bronze rows | Bronze duplicates | Silver listens | Gold rows | Date |
+|---|---|---|---|---|---|
+| Before | | | | | |
+| After the forced load and `dbt build` | | | | | |
+| After recovery | | | | | |
 
 ## 7. Incident 2, documented: a public API is down
 
@@ -115,13 +143,15 @@ day is enough: no night on-call.
 | Test | Expected | Result |
 |---|---|---|
 | Elimane uploads to the landing bucket | Allowed | |
-| Hugo (reader) uploads to the landing bucket | **Denied** (403) | |
+| Hugo (in `readers`) uploads to the landing bucket | **Denied** (403) | |
 | Snowflake lists the stage | Allowed | |
 | Dash read-only role reads `BRONZE` | **Denied** | |
 
+Hugo must be in `readers` in `terraform/terraform.tfvars`, applied, for the denied test to mean something.
+
 ```bash
 echo '{"test": true}' > test.json
-gcloud storage cp test.json gs://iconic-ruler-513415-p0-landing/test/test.json
+gcloud storage cp test.json gs://vayba-elimane-2026-landing/test/test.json
 ```
 
 Secrets: Snowflake private keys and GCP credentials stay outside the repository and are mounted read-only into
@@ -145,18 +175,23 @@ GCP: Billing → Reports, filtered on the project.
 | Snowflake compute | XSMALL warehouse, 1 credit per running hour, auto-suspend 60 s | | weekly run length × 52 |
 | Snowflake storage | bronze + silver + gold size | | grows with listens kept |
 | GCS storage | files kept 30 days (lifecycle rule) | | weekly volume × 4 |
-| GCS to Snowflake transfer | Snowflake runs on AWS, the bucket on GCP | | weekly volume read once |
+| GCS to Snowflake transfer | GCP to AWS, both in Oregon: cross-cloud, same area | | weekly volume read once |
 
 Fill the projection with real numbers from one weekly run; state every assumption on the slide.
 
 ## 10. Budget alert and shutdown (C7)
 
-**Alerts:** GCP budget alert on the project (warns, does not cap). On Snowflake, the account owner adds a monitor
-that stops the warehouse:
+**GCP:** budget alert of 5 € on project `vayba-elimane-2026`, emails at 50, 90 and 100 % (alert only, no cap).
+Evidence: `docs/evidence/2026-11-02_gcp_budget_alert.png`.
+
+**Snowflake:** the account owner (Hugo, ACCOUNTADMIN) adds a monitor on `VAYBA_WH` only: 10 credits per month,
+notification at 8, suspension at 10 once running queries finish. Provisional, to adjust once one weekly run is
+measured. It caps this warehouse, not the whole bill:
 
 ```sql
 USE ROLE ACCOUNTADMIN;
-CREATE RESOURCE MONITOR IF NOT EXISTS VAYBA_MONITOR WITH CREDIT_QUOTA = 10
+CREATE RESOURCE MONITOR IF NOT EXISTS VAYBA_MONITOR WITH CREDIT_QUOTA = 10 FREQUENCY = MONTHLY
+  START_TIMESTAMP = IMMEDIATELY
   TRIGGERS ON 80 PERCENT DO NOTIFY ON 100 PERCENT DO SUSPEND;
 ALTER WAREHOUSE VAYBA_WH SET RESOURCE_MONITOR = VAYBA_MONITOR;
 ```
@@ -168,11 +203,11 @@ cd airflow && docker compose down
 ```
 
 ```sql
-ALTER WAREHOUSE VAYBA_WH SUSPEND;
+ALTER WAREHOUSE VAYBA_WH SUSPEND;  -- needs OPERATE on the warehouse; auto-suspend (60 s) does it anyway
 ```
 
 **Full cleanup** (after grading only, never before the defense):
-1. Empty the landing bucket: `gcloud storage rm "gs://iconic-ruler-513415-p0-landing/**"`
+1. Empty the landing bucket: `gcloud storage rm "gs://vayba-elimane-2026-landing/**"`
 2. `cd terraform && terraform destroy` (the bucket refuses deletion while it holds files).
-3. In Snowflake: `DROP DATABASE VAYBA;`, `DROP WAREHOUSE VAYBA_WH;`, `DROP INTEGRATION VAYBA_GCS_INT;`
+3. In Snowflake (Hugo): `DROP DATABASE VAYBA;`, `DROP WAREHOUSE VAYBA_WH;`, `DROP INTEGRATION VAYBA_GCS_INT;`
 4. Delete the state bucket, then shut the GCP project down from the console.

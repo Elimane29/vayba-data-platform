@@ -140,6 +140,21 @@ Variables live in `.env`, never committed, with the template in `.env.example`: 
 
 **If time runs short, cut in this order:** Wikidata and pageviews, cloud deployment of the app, CI, genre check. Never cut: end-to-end pipeline, tests, replay, tested incident.
 
+## 8b. Presenting the architecture
+From the instructor's slide. Every slide and README must help answer these questions. Draft answers must be confirmed by real runs before being presented.
+
+**Expectations:** make it nice to look at; understand the business case first, because data serves a use case; think about table and file formats; show different streams only if needed; understand storage and compute.
+
+| Challenge | Question | Draft answer |
+|---|---|---|
+| **Latency** | What does the business really need? | A weekly playlist, so weekly batch. No streaming |
+| **Scaling** | Can it scale, for consumers and for the provider? | Compute and storage scale separately in Snowflake. Volumes and limits to be measured |
+| **Ownership** | Who fixes a broken arrow at 3 a.m.? | The part owner, then the backup in section 7. The DAG sends the alert |
+| **Single source of truth** | Is the metric computed in one place only? | Yes: in `GOLD`, through dbt. Dash only reads it |
+| **Cost driver** | Storage, compute or data transfer? | Probably compute, then GCS to Snowflake transfer. To be confirmed with real costs |
+| **Security** | Where is personal data, and who can see it? | Usernames in bronze, hashed from silver on. Bronze access restricted, `GOLD` read-only role for the app |
+| **Formats** | Which table and file formats, and why? | Source JSON kept in bronze, native Snowflake tables after. Iceberg is the alternative to discuss |
+
 ## 9. Mandatory: saving tokens with Graphify
 AI quota can run out right before the defense, so **every agent must use Graphify**. If it is missing or fails, the agent says so and helps its human set it up before exploring the code.
 

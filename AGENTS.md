@@ -27,6 +27,27 @@ These change only if all 3 members agree.
 
 **Still open:** B2B (recommended) or B2C, and 4 or 5 sources, depending on the instructor's answer.
 
+### Data sources
+Sizes are published compressed sizes, checked on Nov 1, 2026. They may change.
+
+| Priority | Source | Provides | Published size | What we take | Access |
+|---|---|---|---|---|---|
+| 1 | ListenBrainz | Listens: user, time, track, artist, release, MusicBrainz IDs | Full: 233 GB. Incremental: 214 MB for Nov 1 | About 14 days, roughly 3 GB (estimate) | Incremental dumps from `data.metabrainz.org` |
+| 2 | MusicBrainz | Artist genres, type, country, external links | `artist.tar.xz`: 2 GB | Only artists seen in the listens | JSON dump, filtered locally |
+| 3 | Wikidata | Link from an artist to their Wikipedia page | 72 to 157 GB | Only the artists we keep | API only, **never the dumps** |
+| 4 | Wikipedia pageviews | Daily views per page, as external popularity | About 460 to 530 MB per day | Only the artists we keep | API only |
+| 5 | Yambda | Anonymous listens, likes and dislikes | 50 million to 4.79 billion interactions | Nothing, unless 5 sources are required | Hugging Face |
+
+**How they join:** ListenBrainz `artist_mbid` → MusicBrainz → Wikidata ID → Wikipedia page title → pageviews.
+
+**Known limits:**
+- Some listens have no MusicBrainz match: 74 to 100 of 100 listens matched on 3 tested profiles. Keep them out of recommendations, and count them.
+- The MusicBrainz to Wikipedia chain was tested on one artist only. Measure its coverage.
+- ListenBrainz users are not representative of the general public, and listens have no subscription data.
+- Not yet verified: how many days of incremental dumps stay online, how many users have enough history, the content of the `listenbrainz-feedback` dump, ListenBrainz's CC0 license on an official source, and Yambda's license.
+
+**First task for part 1:** download one incremental dump, then count users, listens and the share matched to MusicBrainz.
+
 ## 3. Ownership
 
 ### Part 1: Business and ingestion, owner Yanis

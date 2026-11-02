@@ -44,9 +44,13 @@ WHERE _SOURCE_FILE LIKE 'listenbrainz/week=2026-10-26/%' GROUP BY 1 ORDER BY 1;
 SELECT COUNT(*) - COUNT(DISTINCT RAW:user_name, RAW:listened_at, RAW:recording_msid) FROM VAYBA.BRONZE.LISTENS_RAW;
 ```
 
-Reference run, `--no-load`, 2026-11-02, week 2026-10-26: listenbrainz 1,411 listens (Mergzo 232, frankpanduh 440,
-jwheel 333, zzzach 406) in 11 s, second run byte-identical; wikipedia 379 artists with pageviews out of 388 with a
-Wikidata link, in 2 min. Loading into GCS and Snowflake not run yet (no shared credentials on 2026-11-02).
+Reference runs, `--no-load`, 2026-11-02, week 2026-10-26:
+- listenbrainz, 25 users: 8,001 listens in 40 s, 1,580 distinct artists, 12 % of listens without a MusicBrainz id.
+- listenbrainz, first 4 users only: 1,411 listens (Mergzo 232, frankpanduh 440, jwheel 333, zzzach 406), second run
+  byte-identical.
+- wikipedia, same 4 users: 379 artists with pageviews out of 388 with a Wikidata link, in 2 min.
+
+Loading into GCS and Snowflake not run yet: the bucket and the shared Snowflake account do not exist yet (2026-11-02).
 
 ## Known failures
 
@@ -56,5 +60,6 @@ Wikidata link, in 2 min. Loading into GCS and Snowflake not run yet (no shared c
 | `no listens landed for week ...` | `musicbrainz` or `wikipedia` run before `listenbrainz` | run `listenbrainz` first |
 | `ListenBrainz user X not found` | user renamed or deleted | fix `listenbrainz_users.txt` |
 | MusicBrainz 503 "busy" | its 1 request/s limit, or overload | 5 tries with a growing delay, then failure |
-| First `musicbrainz` run takes 15–30 min | ~900 artists at 1 request/s | later weeks fetch only new artists |
-| ~8 % of listens have no `mbid_mapping` | ListenBrainz could not match the track | kept in bronze; silver quarantines them |
+| First `musicbrainz` run takes 30–45 min | about 1,000 new artists for 25 users, at 1 request/s | run it before any demo; later weeks fetch only new artists |
+| ListenBrainz answers an HTML page "Verifying your browser" with status 200 | its anti-bot check, seen on 2026-11-02 after ~100 fast calls | treated as a temporary error: retried with a growing delay; 1 s pause between calls |
+| ~12 % of listens have no `mbid_mapping` | ListenBrainz could not match the track | kept in bronze; silver quarantines them |

@@ -49,7 +49,8 @@ def week_bounds(week):
 
 
 def get_json(url, pause=0.0, tries=5):
-    """GET with a timeout, retries on 429 / 5xx / network errors with a growing delay, loud failure. 404 -> None."""
+    """GET with a timeout, retries on 429 / 5xx / network errors / non-JSON answers with a growing delay,
+    loud failure. 404 -> None."""
     for attempt in range(tries):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": UA})
@@ -61,7 +62,8 @@ def get_json(url, pause=0.0, tries=5):
                 return None
             if e.code not in (429, 500, 502, 503, 504) or attempt == tries - 1:
                 raise
-        except (urllib.error.URLError, TimeoutError):
+        # ValueError: an HTML page with status 200, e.g. ListenBrainz's "Verifying your browser" anti-bot check
+        except (urllib.error.URLError, TimeoutError, ValueError):
             if attempt == tries - 1:
                 raise
         time.sleep(2 ** attempt)
@@ -128,7 +130,7 @@ def ingest_listenbrainz(week, start, end, upload):
         listens, max_ts = [], int(end.timestamp())
         while True:
             page = get_json(f"https://api.listenbrainz.org/1/user/{urllib.parse.quote(user)}/listens"
-                            f"?count=1000&max_ts={max_ts}", pause=0.3)
+                            f"?count=1000&max_ts={max_ts}", pause=1.0)  # polite: fewer anti-bot checks
             if page is None:
                 raise RuntimeError(f"ListenBrainz user {user} not found")
             batch = page["payload"]["listens"]  # newest first

@@ -33,10 +33,10 @@ sheet in section 3 is the same in both cases.
 
 | Constraint | Value | Source |
 |---|---|---|
-| Listens per user per week | about 350 | **measured**: 1,411 listens for 4 users, week 2026-10-26 |
-| Raw size of one listen | about 1.4 KB | **measured**: 9.2 MB for 6,652 listens (extract of 2026-11-02) |
-| Bronze growth at launch | 100,000 × 350 × 1.4 KB ≈ **49 GB per week** | computed from H2 and the two lines above |
-| Listens without a MusicBrainz id | about 8 % | **measured**: 527 of 6,652 |
+| Listens per user per week | about 320 | **measured**: 8,001 listens for 25 users, week 2026-10-26 |
+| Raw size of one listen | about 1.2 KB | **measured**: 1,183 bytes on average, same week |
+| Bronze growth at launch | 100,000 × 320 × 1.2 KB ≈ **38 GB per week** | computed from H2 and the two lines above |
+| Listens without a MusicBrainz id | about 12 % | **measured**: 964 of 8,001, same week |
 | Freshness | Playlist ready Monday 08:00 Europe/Paris, built from listens up to Sunday 23:59:59 UTC | H3 |
 | Playlist size | 20 tracks | H4 |
 | MusicBrainz API | 1 request per second | MusicBrainz rate-limiting rules |
@@ -66,7 +66,7 @@ relative to the data used). Definitions to confirm with Hugo before he implement
 | `DISCOVERY_RATE` | Listens during W by evaluated users of artists absent from their history before W ÷ all their mapped listens during W | Same |
 | `LAST_LOADED_AT` | `MAX(_LOADED_AT)` of the listens used for W | — |
 
-An artist hit (not a track hit): with about 350 listens a week, the exact recording is too rare to measure anything.
+An artist hit (not a track hit): with about 320 listens a week, the exact recording is too rare to measure anything.
 
 ### Acceptance tests
 

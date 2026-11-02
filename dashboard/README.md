@@ -7,6 +7,8 @@ L’application présente deux vues : la playlist par semaine et profil, puis le
 À partir de la racine du dépôt, avec Python 3.10 ou supérieur :
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 python -m pip install -r dashboard/requirements.txt
 export SNOWFLAKE_ACCOUNT="<organisation-compte>"
 export SNOWFLAKE_USER="<utilisateur-autorise>"

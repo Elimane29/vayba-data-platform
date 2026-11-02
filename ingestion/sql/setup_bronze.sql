@@ -1,0 +1,34 @@
+-- One-off setup of the bronze layer. Manual step: list it in the runbook.
+-- Replace <GCS_BUCKET> with the bucket name and <ROLE> with the role(s) members use. Assumes database VAYBA exists.
+
+-- 1. Account owner only (ACCOUNTADMIN): let Snowflake read the bucket
+USE ROLE ACCOUNTADMIN;
+CREATE STORAGE INTEGRATION IF NOT EXISTS VAYBA_GCS_INT
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = 'GCS'
+  ENABLED = TRUE
+  STORAGE_ALLOWED_LOCATIONS = ('gcs://<GCS_BUCKET>/');
+DESC STORAGE INTEGRATION VAYBA_GCS_INT;
+-- -> copy STORAGE_GCP_SERVICE_ACCOUNT and give it the role "Storage Object Viewer" on the bucket (GCP console or Terraform)
+GRANT USAGE ON INTEGRATION VAYBA_GCS_INT TO ROLE <ROLE>;
+
+-- 2. Bronze objects (contract in AGENTS.md section 4), with a role that can create schemas in VAYBA.
+--    Shared layer: BRONZE. To test without touching it: your own DEV_<FIRSTNAME>_BRONZE, and the same name
+--    in VAYBA_BRONZE_SCHEMA in your .env.
+SET BRONZE_SCHEMA = 'BRONZE';
+USE DATABASE VAYBA;
+CREATE SCHEMA IF NOT EXISTS IDENTIFIER($BRONZE_SCHEMA);
+USE SCHEMA IDENTIFIER($BRONZE_SCHEMA);
+
+CREATE FILE FORMAT IF NOT EXISTS JSONL TYPE = JSON;  -- one JSON document per line
+CREATE STAGE IF NOT EXISTS LANDING_GCS
+  URL = 'gcs://<GCS_BUCKET>/'
+  STORAGE_INTEGRATION = VAYBA_GCS_INT
+  FILE_FORMAT = JSONL;
+
+CREATE TABLE IF NOT EXISTS LISTENS_RAW        (RAW VARIANT, _SOURCE_FILE VARCHAR, _BATCH_ID VARCHAR, _LOADED_AT TIMESTAMP_TZ);
+CREATE TABLE IF NOT EXISTS MB_ARTISTS_RAW     (RAW VARIANT, _SOURCE_FILE VARCHAR, _BATCH_ID VARCHAR, _LOADED_AT TIMESTAMP_TZ);
+CREATE TABLE IF NOT EXISTS WIKI_PAGEVIEWS_RAW (RAW VARIANT, _SOURCE_FILE VARCHAR, _BATCH_ID VARCHAR, _LOADED_AT TIMESTAMP_TZ);
+
+-- 3. Check: the stage sees the files
+LIST @LANDING_GCS/listenbrainz/;

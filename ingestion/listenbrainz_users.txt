@@ -1,0 +1,30 @@
+# Public ListenBrainz users whose listens Vayba ingests, one per line.
+# Selected on 2026-11-02 among the top listeners of 17 popular artists: active in each of the 6 weeks
+# 2026-09-21 to 2026-11-01 (at least 20 listens a week, at most 3,000 in total), at least 80 % of listens
+# matched to MusicBrainz, then added one by one to maximise shared artists (279 of 300 pairs share at least one).
+# The first 4 are the users of tests/fixtures. Names are public on ListenBrainz; silver replaces them with a hash.
+frankpanduh
+Mergzo
+jwheel
+zzzach
+Eggman
+leppard83
+ah0tel
+iagohale
+Azazel_172
+waterslug
+veryonlineguy
+come1111
+odddella
+founder2806
+caitlyn
+shamam
+motherheroic
+Skintight3286
+romsnesrom
+glazzari
+malberto
+guckuck
+manunanakicid
+IAmDead1996
+poemago

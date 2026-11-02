@@ -1,10 +1,10 @@
--- Called by on-run-end: stores one row per model/test result in REDGRAVE.LAB.DBT_RESULTS.
+-- Run evidence stays inside the developer schema.
 -- runtime = where dbt ran: local (your laptop), docker (Docker lab) or airflow (Airflow lab).
 {% macro log_run_results(results) %}
-  {% if execute and results | length > 0 %}
-    {% set table = target.database ~ '.LAB.DBT_RESULTS' %}
+  {% if execute and target.type == "snowflake" and results | length > 0 %}
+    {% set table = target.database ~ '.' ~ target.schema ~ '_OPS.DBT_RESULTS' %}
     {% set runtime = env_var('VAYBA_RUNTIME', 'local') %}
-    {% do run_query('create schema if not exists ' ~ target.database ~ '.LAB') %}
+    {% do run_query('create schema if not exists ' ~ target.database ~ '.' ~ target.schema ~ '_OPS') %}
     {% do run_query('create table if not exists ' ~ table ~ ' (
         invocation_id varchar, run_at timestamp_tz, command varchar, runtime varchar,
         node varchar, resource_type varchar, status varchar,

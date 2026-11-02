@@ -1,0 +1,22 @@
+# Vayba · Airflow on a laptop (one container, "standalone" mode: web UI + scheduler).
+# Start: docker compose up --build    UI: http://localhost:8080
+# Stop:  Ctrl+C then docker compose down
+services:
+  airflow:
+    build: .
+    image: vayba-airflow:1.0.0
+    command: standalone
+    ports:
+      - "8080:8080"
+    env_file: .env # account, bucket and secret folders (not committed)
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: "Europe/Paris"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      # Lets Airflow start the vayba-pipeline containers on the local Docker
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Laptop shortcut: root is needed to use the Docker socket.
+    # In production the tasks would run as Kubernetes pods and nothing would run as root.
+    user: "0:0"

@@ -1,0 +1,14 @@
+.git
+.env
+.venv
+**/*.p8
+**/__pycache__
+data/
+docs/
+tests/
+airflow/
+terraform/
+graphify-out/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/

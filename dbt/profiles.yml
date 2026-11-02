@@ -16,5 +16,5 @@ vayba:
       role: "{{ env_var('SNOWFLAKE_ROLE', 'SYSADMIN') }}"
       warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'VAYBA_WH') }}"
       database: VAYBA
-      schema: DEV_HUGO
+      schema: "{{ env_var('VAYBA_DEV_SCHEMA', 'DEV_HUGO') }}"
       threads: 1

@@ -1,0 +1,7 @@
+# Public ListenBrainz users whose listens Vayba ingests, one per line.
+# Chosen because they listen every week and share 8 to 34 artists with each other (checked 2026-11-02).
+# Their names are public on ListenBrainz; silver replaces them with a hash.
+frankpanduh
+Mergzo
+jwheel
+zzzach

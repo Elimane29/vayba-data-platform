@@ -18,8 +18,11 @@ Every bronze row: `RAW` (untouched source document), `_SOURCE_FILE` (path in the
 
 - Python 3.10+, `pip install -r requirements.txt`
 - `.env` at the repository root (template `.env.example`): `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`,
-  `SNOWFLAKE_PRIVATE_KEY_FILE`, `GCS_BUCKET`, `GOOGLE_APPLICATION_CREDENTIALS`
-- Once: `ingestion/sql/setup_bronze.sql` (storage integration with ACCOUNTADMIN, stage, 3 tables)
+  `SNOWFLAKE_PRIVATE_KEY_FILE`, `GCS_BUCKET`, `GOOGLE_APPLICATION_CREDENTIALS`.
+  Optional, defaults in brackets: `SNOWFLAKE_ROLE` (`SYSADMIN`), `SNOWFLAKE_WAREHOUSE` (`VAYBA_WH`),
+  `VAYBA_BRONZE_SCHEMA` (`BRONZE`; set `DEV_<FIRSTNAME>_BRONZE` to test without touching shared bronze)
+- Once: `ingestion/sql/setup_bronze.sql`. Part 1 is for the Snowflake account owner (storage integration,
+  ACCOUNTADMIN); part 2 creates the stage and the 3 tables, once for `BRONZE` and once per `DEV_*_BRONZE` schema
 
 ## Run
 

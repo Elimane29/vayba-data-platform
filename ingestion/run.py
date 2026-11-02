@@ -206,7 +206,10 @@ def load(table, prefix, batch_id, replace):
     con = snowflake.connector.connect(
         account=os.environ["SNOWFLAKE_ACCOUNT"], user=os.environ["SNOWFLAKE_USER"],
         private_key_file=os.environ["SNOWFLAKE_PRIVATE_KEY_FILE"],
-        role="SYSADMIN", warehouse="VAYBA_WH", database="VAYBA", schema="BRONZE")
+        role=os.environ.get("SNOWFLAKE_ROLE", "SYSADMIN"),
+        warehouse=os.environ.get("SNOWFLAKE_WAREHOUSE", "VAYBA_WH"),
+        database="VAYBA",
+        schema=os.environ.get("VAYBA_BRONZE_SCHEMA", "BRONZE"))  # DEV_<FIRSTNAME>_BRONZE to test (AGENTS.md §5)
     try:
         cur = con.cursor()
         cur.execute("BEGIN")

@@ -1,0 +1,38 @@
+-- Read-only checks for the week of 2026-10-26. Compare both run outputs.
+WITH l AS
+  (SELECT *
+   FROM VAYBA.BRONZE.LISTENS_RAW
+   WHERE _SOURCE_FILE LIKE 'listenbrainz/week=2026-10-26/%'),
+     w AS
+  (SELECT *
+   FROM VAYBA.BRONZE.WIKI_PAGEVIEWS_RAW
+   WHERE _SOURCE_FILE LIKE 'wikipedia/week=2026-10-26/%')
+SELECT 'LISTENS_RAW' AS SOURCE,
+       COUNT(*) AS N,
+       COUNT(DISTINCT _SOURCE_FILE) AS FILES,
+       HASH_AGG(RAW, _SOURCE_FILE) AS CONTENT_HASH,
+
+  (SELECT COALESCE(SUM(N-1), 0)
+   FROM
+     (SELECT COUNT(*) AS N
+      FROM l
+      GROUP BY RAW:user_name,
+                   RAW:listened_at,
+                       RAW:recording_msid
+      HAVING COUNT(*)>1)) AS DUPLICATES
+FROM l
+UNION ALL
+SELECT 'MB_ARTISTS_RAW',
+       COUNT(*),
+       COUNT(DISTINCT _SOURCE_FILE),
+       HASH_AGG(RAW, _SOURCE_FILE),
+       COUNT(*)-COUNT(DISTINCT RAW:id)
+FROM VAYBA.BRONZE.MB_ARTISTS_RAW
+UNION ALL
+SELECT 'WIKI_PAGEVIEWS_RAW',
+       COUNT(*),
+       COUNT(DISTINCT _SOURCE_FILE),
+       HASH_AGG(RAW, _SOURCE_FILE),
+       COUNT(*)-COUNT(DISTINCT _SOURCE_FILE)
+FROM w
+ORDER BY SOURCE;

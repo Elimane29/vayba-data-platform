@@ -1,0 +1,74 @@
+{
+  "date": "2026-11-03",
+  "mode": "manual_snowsight_copy_into",
+  "user": "YANIS_RAJHI",
+  "role": "VAYBA_YANIS",
+  "warehouse": "VAYBA_WH",
+  "snowflake_version": "10.40.100",
+  "schema": "VAYBA.BRONZE",
+  "week": "2026-10-26",
+  "bucket": "vayba-elimane-2026-landing",
+  "run1": {
+    "batch_id": "yanis-20261103-all-run1",
+    "query_id": "01c82944-040c-c3cb-0034-1e6b0018a0c2",
+    "status": "SUCCESS",
+    "duration_ms": 11566,
+    "results": [
+      {
+        "source": "LISTENS_RAW",
+        "rows": 8003,
+        "files": 25,
+        "content_hash": "3090588487427862758",
+        "duplicates": 0
+      },
+      {
+        "source": "MB_ARTISTS_RAW",
+        "rows": 1580,
+        "files": 1580,
+        "content_hash": "-1216057147528561248",
+        "duplicates": 0
+      },
+      {
+        "source": "WIKI_PAGEVIEWS_RAW",
+        "rows": 1234,
+        "files": 1234,
+        "content_hash": "3846441568069588004",
+        "duplicates": 0
+      }
+    ]
+  },
+  "run2": {
+    "batch_id": "yanis-20261103-all-run2",
+    "query_id": "01c82945-040c-c63e-0034-1e6b0018b0da",
+    "status": "SUCCESS",
+    "duration_ms": 10367,
+    "results": [
+      {
+        "source": "LISTENS_RAW",
+        "rows": 8003,
+        "files": 25,
+        "content_hash": "3090588487427862758",
+        "duplicates": 0
+      },
+      {
+        "source": "MB_ARTISTS_RAW",
+        "rows": 1580,
+        "files": 1580,
+        "content_hash": "-1216057147528561248",
+        "duplicates": 0
+      },
+      {
+        "source": "WIKI_PAGEVIEWS_RAW",
+        "rows": 1234,
+        "files": 1234,
+        "content_hash": "3846441568069588004",
+        "duplicates": 0
+      }
+    ]
+  },
+  "counts_equal": true,
+  "content_hashes_equal": true,
+  "duplicates": 0,
+  "dbt_prod_build_executed": false,
+  "airflow_replay_executed": false
+}

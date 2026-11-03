@@ -53,7 +53,24 @@ Reference runs, `--no-load`, 2026-11-02, week 2026-10-26:
   byte-identical.
 - wikipedia, same 4 users: 379 artists with pageviews out of 388 with a Wikidata link, in 2 min.
 
-Loading into GCS and Snowflake not run yet: the bucket and the shared Snowflake account do not exist yet (2026-11-02).
+Additional local run, 2026-11-02, week 2026-10-26: 8,003 listens for 25 users,
+with 0 duplicates on `(user file, listened_at, recording_msid)`. The earlier 8,001 count is a previous
+measurement, not a fixed expected count: late listens can change the API response.
+
+Production validation, 2026-11-03, week 2026-10-26:
+- `VAYBA.BRONZE.LISTENS_RAW`: 8,003 rows from 25 files, 0 duplicates.
+- `VAYBA.BRONZE.MB_ARTISTS_RAW`: 1,580 rows from 1,580 files, 0 duplicate artist ids.
+- Both were loaded from the GCS stage with `VAYBA_YANIS`, then replayed from the **same files**.
+  Counts and `HASH_AGG(RAW, _SOURCE_FILE)` stayed identical.
+- This is a manual Snowsight `COPY INTO` validation. The Airflow replay and dbt production build are separate,
+  not yet executed by this session. Evidence: `docs/evidence/2026-11-03_bronze_replay.json`.
+- `VAYBA.BRONZE.WIKI_PAGEVIEWS_RAW`: 1,234 rows from 1,234 files. The three-source replay also passed, with 0 duplicates and identical content hashes.
+  Evidence: `docs/evidence/2026-11-03_three_sources_replay.json`.
+
+After loading, run `ingestion/sql/verify_prod.sql` in Snowsight twice, once before and once after replay.
+Keep the same landed files during this test: compare row counts and content hashes, excluding the batch ID
+and load timestamp. A second extraction from the live API is a separate freshness test and can legitimately
+produce additional listens. Save both outputs and run IDs in `docs/evidence/`.
 
 ## Known failures
 

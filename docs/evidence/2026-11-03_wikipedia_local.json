@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-03",
+  "week": "2026-10-26",
+  "artists_with_pageviews": 1234,
+  "artists_with_wikidata": 1278,
+  "coverage_of_wikidata_artists": 0.9655712050078247,
+  "items_per_file": {
+    "7": 1234
+  },
+  "observations_per_day": {
+    "20261026": 1234,
+    "20261027": 1234,
+    "20261028": 1234,
+    "20261029": 1234,
+    "20261030": 1234,
+    "20261031": 1234,
+    "20261101": 1234
+  },
+  "duplicate_dates_within_file": 0,
+  "pageviews_sum": 11812685,
+  "cloud_loaded": false
+}

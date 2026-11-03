@@ -76,3 +76,28 @@ An artist hit (not a track hit): with about 320 listens a week, the exact record
 | A2 | Freshness | `LAST_LOADED_AT` less than 24 h before the Monday run |
 | A3 | Playlist shape | Each user of the week has positions 1 to 20, no duplicate recording, no artist from their history before W |
 | A4 | Value | On the evaluated weeks, `HIT_RATE_S1 ≥ HIT_RATE_BASELINE_S1`; otherwise the decision rule says: fall back to popularity |
+
+## 4. Prototype evidence (2026-11-03)
+
+The manual GCS-to-Snowflake load and replay were executed on `VAYBA.BRONZE`, with
+`YANIS_RAJHI` / `VAYBA_YANIS`. For week 2026-10-26, both runs returned:
+
+| Source | Rows | Files | Duplicates after replay |
+|---|---:|---:|---:|
+| ListenBrainz | 8,003 | 25 | 0 |
+| MusicBrainz | 1,580 | 1,580 | 0 |
+| Wikipedia pageviews | 1,234 | 1,234 | 0 |
+
+Counts and `HASH_AGG(RAW, _SOURCE_FILE)` stayed unchanged. This validates A1 for these frozen files,
+not the Airflow replay or a fresh extraction from a changing API. Full query IDs and screenshots are in
+`docs/evidence/2026-11-03_three_sources_replay.json` and the corresponding images.
+
+On this local extract, 965 of 8,003 listens have no artist mapping (12.06%). Among 1,278 artists with a
+Wikidata link, 1,234 have pageviews for each of the seven days (96.56%). These are sample measurements,
+not population estimates. An artist absent from the observed history is not necessarily an artist the user
+has never heard in their lifetime.
+
+A2-A4, the recommendation gain, and the production dbt build remain to be measured. A valid S+1 evaluation
+needs training data before the target week and a complete evaluation week. The team still needs to confirm
+the commercial choice, metric definitions, and API-versus-dump decision. Hashing user names from silver
+pseudonymizes identifiers; it does not by itself guarantee anonymity.

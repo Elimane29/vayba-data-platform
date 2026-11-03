@@ -1,0 +1,15 @@
+{
+  "checked_at_utc": "2026-11-02T17:50:16.031203+00:00",
+  "week": "2026-10-26",
+  "source": "listenbrainz",
+  "mode": "local_no_load",
+  "files": 25,
+  "rows": 8003,
+  "bytes": 9486050,
+  "artist_mbids": 1580,
+  "unmapped_listens": 965,
+  "unmapped_share": 0.12057978258153193,
+  "duplicates": 0,
+  "sha256_named_files": "294fa70e52faae3afca5942855855e9c6a2c4700b462a8ec009a93c503ff02d0",
+  "cloud_loaded": false
+}

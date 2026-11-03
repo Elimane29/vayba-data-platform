@@ -1,0 +1,27 @@
+{
+  "checked_at_utc": "2026-11-03T09:06:34.668209+00:00",
+  "week": "2026-10-26",
+  "sources": {
+    "listenbrainz": {
+      "files": 25,
+      "rows": 8003,
+      "bytes": 9486050,
+      "duplicates": 0,
+      "sha256_named_files": "b699e8bc3d1766c3a352154566e89cef6aa63aaaa0df6e6a0d4712376b6c4334"
+    },
+    "musicbrainz": {
+      "files": 1580,
+      "rows": 1580,
+      "bytes": 18816336,
+      "duplicates": 0,
+      "sha256_named_files": "05b6cb4821a501a5105fc432080754a96a004607ae5fcf55f87b256e822f43c3"
+    },
+    "wikipedia": {
+      "files": 1234,
+      "rows": 1234,
+      "bytes": 1420953,
+      "duplicates": 0,
+      "sha256_named_files": "bbb829e5c08c3f4bf4e1d8faffbdd34433cb770d60e97d9f0fb7017d82bdda74"
+    }
+  }
+}

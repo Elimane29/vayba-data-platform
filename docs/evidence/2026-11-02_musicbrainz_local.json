@@ -1,0 +1,12 @@
+{
+  "checked_at_utc": "2026-11-02T18:32:36.273051+00:00",
+  "source": "musicbrainz",
+  "mode": "local_no_load",
+  "files": 1580,
+  "rows": 1580,
+  "distinct_artists": 1580,
+  "artists_with_wikidata": 1278,
+  "bytes": 18816336,
+  "sha256_named_files": "b72987ae9240cfa1e0453e26740eddc70128e834a99bf4029a18f31a17eac7e9",
+  "cloud_loaded_to_snowflake": false
+}

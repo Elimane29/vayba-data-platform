@@ -101,3 +101,21 @@ A2-A4, the recommendation gain, and the production dbt build remain to be measur
 needs training data before the target week and a complete evaluation week. The team still needs to confirm
 the commercial choice, metric definitions, and API-versus-dump decision. Hashing user names from silver
 pseudonymizes identifiers; it does not by itself guarantee anonymity.
+
+### Two-week extension and measured local S+1 result
+
+The final frozen input now includes the complete weeks of October 19 and October 26:
+16,447 listens and 2,478 artists, plus the same 1,234 Wikipedia documents for October 26.
+Both manual Snowflake runs produced identical business content hashes and zero duplicates.
+The earlier table remains the first, single-week snapshot.
+
+Hugo PR4 (`cd28e33`) was built locally on these real extracts with training starting October 19,
+target week October 26, and evaluation ending November 2: 12 models, 13 tests and the hook passed.
+For 25 evaluated users, hit rate was **48% versus 56% for popularity**, and discovery rate was 100%.
+A4 is therefore **not met on this sample**; apply the agreed popularity fallback or review the rule
+before presenting a recommendation gain. This local result is not a production dbt result.
+
+The build produced 250 playlist rows (10 per user); A3 above specifies 20. The team must align
+the implemented playlist size and business contract. Wikipedia is loaded in bronze but is not
+consumed by the current dbt models. Production dbt, Airflow replay and an actual cloud incident
+still require the operations owner's validation. See the dated handoff in `docs/evidence/`.

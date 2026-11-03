@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-03",
+  "method": "Manual Snowsight transactional COPY INTO; not Airflow",
+  "database": "VAYBA",
+  "schema": "BRONZE",
+  "role": "VAYBA_YANIS",
+  "warehouse": "VAYBA_WH",
+  "stage": "VAYBA.BRONZE.LANDING_GCS",
+  "bucket": "vayba-elimane-2026-landing",
+  "listen_weeks": [
+    "2026-10-19",
+    "2026-10-26"
+  ],
+  "wikipedia_week": "2026-10-26",
+  "run1": {
+    "query_id": "01c8296b-040c-c63d-0034-1e6b0018611e",
+    "status": "SUCCESS",
+    "elapsed_ms": 18524,
+    "results": [
+      {
+        "source": "LISTENS_RAW",
+        "rows": 16447,
+        "files": 50,
+        "content_hash": "-6184359835203045156",
+        "duplicates": 0
+      },
+      {
+        "source": "MB_ARTISTS_RAW",
+        "rows": 2478,
+        "files": 2478,
+        "content_hash": "3544366426310076962",
+        "duplicates": 0
+      },
+      {
+        "source": "WIKI_PAGEVIEWS_RAW",
+        "rows": 1234,
+        "files": 1234,
+        "content_hash": "3846441568069588004",
+        "duplicates": 0
+      }
+    ]
+  },
+  "run2": {
+    "query_id": "01c8296c-040c-c63f-0034-1e6b00185172",
+    "status": "SUCCESS",
+    "elapsed_ms": 17670,
+    "results": [
+      {
+        "source": "LISTENS_RAW",
+        "rows": 16447,
+        "files": 50,
+        "content_hash": "-6184359835203045156",
+        "duplicates": 0
+      },
+      {
+        "source": "MB_ARTISTS_RAW",
+        "rows": 2478,
+        "files": 2478,
+        "content_hash": "3544366426310076962",
+        "duplicates": 0
+      },
+      {
+        "source": "WIKI_PAGEVIEWS_RAW",
+        "rows": 1234,
+        "files": 1234,
+        "content_hash": "3846441568069588004",
+        "duplicates": 0
+      }
+    ]
+  },
+  "replay_pass": true,
+  "comparison": "HASH_AGG(RAW, _SOURCE_FILE); mutable load metadata excluded",
+  "load_script": "ingestion/sql/load_two_weeks.sql",
+  "verification_script": "ingestion/sql/verify_two_weeks.sql",
+  "production_dbt_executed": false,
+  "airflow_replay_executed": false
+}

@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-03",
+  "pr": "https://github.com/Elimane29/vayba-data-platform/pull/4",
+  "commit": "cd28e33",
+  "target": "local DuckDB only",
+  "fixtures_loaded": {
+    "LISTENS_RAW": 6652,
+    "MB_ARTISTS_RAW": 915
+  },
+  "dbt_build": {
+    "exit_code": 0,
+    "models": 12,
+    "tests": 13,
+    "operations": 1,
+    "pass": 26,
+    "errors": 0
+  },
+  "pipeline_checks": {
+    "real_data_replay": "PASS",
+    "metrics": {
+      "week_start": "2026-10-26",
+      "users_evaluated": 4,
+      "hit_rate_s1": 0.75,
+      "hit_rate_baseline_s1": 0.5,
+      "discovery_rate": 1.0,
+      "last_loaded_at": "2026-11-02 10:00:34+01:00"
+    },
+    "playlist_rows": 40,
+    "no_temporal_leakage": "PASS",
+    "api_source_filename_compatibility": "PASS: 6652 API-shaped listens produce identical gold results",
+    "hand_calculated_acceptance": "PASS: A -> Z; score=2/3; invalid listen quarantined",
+    "injected_missing_artist": "PASS: no_unknown_artists failed as expected",
+    "executed_at_utc": "2026-11-03T10:02:10.542284+00:00",
+    "execution_target": "local DuckDB; Snowflake not executed",
+    "files_sha256": {
+      "listens_raw.jsonl": "f343836268b3a1b9e16e4f23f989e6889599da45a34b36d272f63a2b38fefe27",
+      "mb_artists_raw.jsonl": "95b11185992f2f70df3d1f2d83d270ae3b05252c31f72007ecdcc50bddf5938e"
+    }
+  },
+  "original_check_targets_windows": {
+    "status": "FAIL",
+    "assertion": [
+      "prod",
+      "evaluation_users",
+      "GOLD"
+    ],
+    "cause": "Layer detection searches /gold/ while Windows dbt paths use backslashes."
+  },
+  "normalized_path_diagnostic": {
+    "execution_target": "offline dbt parse and Jinja checks; no Snowflake execution",
+    "targets": {
+      "prod": {
+        "models": 12,
+        "schemas": [
+          "GOLD",
+          "SILVER"
+        ],
+        "bronze": "BRONZE",
+        "log_schema": "OPS"
+      },
+      "dev": {
+        "models": 12,
+        "schemas": [
+          "DEV_ROUTING_CHECK_GOLD",
+          "DEV_ROUTING_CHECK_SILVER"
+        ],
+        "bronze": "DEV_HUGO_BRONZE",
+        "log_schema": "DEV_ROUTING_CHECK_OPS"
+      },
+      "local": {
+        "models": 12,
+        "schemas": [
+          "DEV_HUGO_GOLD",
+          "DEV_HUGO_SILVER"
+        ],
+        "bronze": "DEV_HUGO_BRONZE"
+      }
+    },
+    "role_and_warehouse_from_environment": true
+  },
+  "prod_build_executed": false,
+  "source_pr_modified": false
+}

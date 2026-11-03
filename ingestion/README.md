@@ -74,6 +74,18 @@ produce additional listens. Save both outputs and run IDs in `docs/evidence/`.
 
 ## Known failures
 
+Final two-week extension, 2026-11-03:
+- Frozen ListenBrainz weeks 2026-10-19 and 2026-10-26: 16,447 rows / 50 files.
+- MusicBrainz cache: 2,478 artists / files; Wikipedia week 2026-10-26: 1,234 rows / files.
+- `ingestion/sql/load_two_weeks.sql` and `verify_two_weeks.sql` were executed twice in Snowsight.
+  Counts and content hashes matched, with zero duplicates for all three sources.
+- Evidence: `docs/evidence/2026-11-03_two_weeks_replay.json` and screenshots.
+- Hugo PR4 was also built locally on these actual API extracts: 12 models + 13 tests + hook passed.
+  This does not certify Snowflake SQL execution or Airflow. Use explicit dbt vars
+  `history_start: 2026-10-19`, `week_start: 2026-10-26`, `test_end: 2026-11-02`.
+- Local S+1 results: 25 users, hit rate 0.48 versus popularity 0.56; no uplift demonstrated.
+  See `docs/evidence/2026-11-03_real_data_dbt_local.json` and the handoff for remaining decisions.
+
 | Symptom | Cause | What happens |
 |---|---|---|
 | Exit code 1, `FAILED <source> <week>: ...` on stderr | any error | nothing in bronze changes (one transaction); the week's GCS files are replaced only after every API call succeeded |

@@ -1,0 +1,148 @@
+{
+  "date": "2026-11-03",
+  "target": "local DuckDB; no production dbt execution",
+  "pr": "https://github.com/Elimane29/vayba-data-platform/pull/4",
+  "commit": "cd28e33",
+  "variables": {
+    "history_start": "2026-10-19",
+    "week_start": "2026-10-26",
+    "test_end": "2026-11-02"
+  },
+  "bronze": {
+    "listens": 16447,
+    "artists": 2478,
+    "unresolved_artist_ids": 0,
+    "duplicate_listens": 0
+  },
+  "invocation_id": "82cc6cc3-e1ab-45b1-ab55-49ec2587b129",
+  "exit_code": 0,
+  "result_counts": {
+    "success": 13,
+    "pass": 13
+  },
+  "results": [
+    {
+      "unique_id": "model.vayba_dbt.listens_checked",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.silver_artists",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.listens_quarantine",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.silver_listens",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.vayba_dbt.not_null_silver_artists_artist_mbid.4f292f7aea",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.unique_silver_artists_artist_mbid.cfc2782d17",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.not_null_silver_listens_listen_key.0936ef6f29",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.not_null_silver_listens_listened_at.71f235c6fc",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.not_null_silver_listens_user_key.e12ffed045",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.unique_silver_listens_listen_key.c2f560b360",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.window_complete",
+      "status": "pass"
+    },
+    {
+      "unique_id": "model.vayba_dbt.listen_artists",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.train_listens",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.vayba_dbt.no_unknown_artists",
+      "status": "pass"
+    },
+    {
+      "unique_id": "model.vayba_dbt.user_artists",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.neighbors",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.ranked_artists",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.playlist_hebdo",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.vayba_dbt.no_known_artist_recommended",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.not_null_playlist_hebdo_artist_name.ee61e16b1a",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.not_null_playlist_hebdo_recording_mbid.bf6351bd27",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.vayba_dbt.playlist_grain",
+      "status": "pass"
+    },
+    {
+      "unique_id": "model.vayba_dbt.evaluation_users",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.vayba_dbt.metrics_hebdo",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.vayba_dbt.valid_rates",
+      "status": "pass"
+    },
+    {
+      "unique_id": "operation.vayba_dbt.vayba_dbt-on-run-end-0",
+      "status": "success"
+    }
+  ],
+  "metrics": [
+    {
+      "week_start": "2026-10-26",
+      "users_evaluated": 25,
+      "hit_rate_s1": 0.48,
+      "hit_rate_baseline_s1": 0.56,
+      "discovery_rate": 1.0,
+      "last_loaded_at": "2026-11-03 11:14:19.330775+01:00"
+    }
+  ],
+  "playlist_rows": 250,
+  "quarantined_listens": 1975,
+  "limitations": [
+    "One history week; small observational sample",
+    "48% hit rate below 56% popularity baseline; A4 unmet",
+    "10 recommendations per user vs 20 in business contract; A3 unresolved",
+    "Wikipedia bronze not consumed by current dbt models",
+    "Local loaded_at is local validation metadata, not Snowflake freshness proof"
+  ]
+}

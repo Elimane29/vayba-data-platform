@@ -1,8 +1,8 @@
 # Vayba: business case and use case sheet
 
 Vayba is a fictional music streaming company. **Promise:** helping people look for new vibes.
-**Product:** every Monday, one "New Vibes" playlist per user, made of artists they have never listened to,
-picked from what people with a similar taste listen to (co-listening).
+**Product:** every Monday, one "New Vibes" playlist per user, with 10 distinct artists absent from their
+observed training history and one representative recording per artist, picked through co-listening.
 
 Every number below is either **measured** on our real data (with its source) or an **assumption** (H1, H2…)
 that we state as such. Nothing here is a real company figure.
@@ -38,7 +38,7 @@ sheet in section 3 is the same in both cases.
 | Bronze growth at launch | 100,000 × 320 × 1.2 KB ≈ **38 GB per week** | computed from H2 and the two lines above |
 | Listens without a MusicBrainz id | about 12 % | **measured**: 964 of 8,001, same week |
 | Freshness | Playlist ready Monday 08:00 Europe/Paris, built from listens up to Sunday 23:59:59 UTC | H3 |
-| Playlist size | 20 tracks | H4 |
+| Playlist size | 10 distinct artists, one representative recording per artist | Agreed prototype convention; `playlist_size=10` |
 | MusicBrainz API | 1 request per second | MusicBrainz rate-limiting rules |
 | Latency needed | one week: a **weekly batch**, no streaming | product definition |
 
@@ -46,27 +46,49 @@ sheet in section 3 is the same in both cases.
 
 | Item | Content |
 |---|---|
-| Decision | **Automatic, every Monday:** which 20 tracks go into each user's playlist for week W. **Human, every week:** the head of product keeps co-listening or falls back to the popularity list |
-| Decision rule | Keep co-listening while `HIT_RATE_S1 ≥ HIT_RATE_BASELINE_S1` on the evaluated weeks |
+| Decision | **Automatic, every Monday:** rank 10 artists for each user's playlist for week W through co-listening. **Human, every week:** the head of product reviews the comparison with popularity and decides the next product action |
+| Decision rule | Accept co-listening's business value only if `HIT_RATE_S1 ≥ HIT_RATE_BASELINE_S1` on the evaluated weeks. Failure requires a human decision; automatic switching to the popularity baseline is not implemented |
 | Users | Listener (playlist), head of product (metrics) |
-| Inputs | `BRONZE.LISTENS_RAW` (who listened to what, when), `MB_ARTISTS_RAW` (artist identity, Wikidata link), `WIKI_PAGEVIEWS_RAW` (how mainstream an artist is) |
+| Inputs | `BRONZE.LISTENS_RAW` (who listened to what, when), `MB_ARTISTS_RAW` (artist identity, Wikidata link), `WIKI_PAGEVIEWS_RAW` (retrospective English Wikipedia attention proxy, with coverage reported) |
 | Outputs | `GOLD.PLAYLIST_HEBDO`, `GOLD.METRICS_HEBDO` (contracts in AGENTS.md) |
 | Frequency | Weekly. Week W = Monday 00:00 UTC to the next Monday 00:00 UTC |
 
 ### Metrics (`GOLD.METRICS_HEBDO`, grain: one row per `WEEK_START`)
 
 The playlist of week W is built only from listens **before** W, and judged on listens **during** W (the "S+1" week
-relative to the data used). Definitions to confirm with Hugo before he implements them.
+relative to the data used). The following definitions align with Hugo's `part2/wiki-discovery` revision
+`c002a7e`; that branch must be integrated for the new Wikipedia metrics and discovery calculation to be
+reproducible from main. These are agreed conventions, rather than claims of causality.
 
 | Column | Formula | Exclusions |
 |---|---|---|
 | `USERS_EVALUATED` | Users with a playlist for W **and** at least one mapped listen during W | Users without listens during W; manual profiles |
 | `HIT_RATE_S1` | Evaluated users who listened during W to at least one artist of their playlist ÷ `USERS_EVALUATED` | Listens without a MusicBrainz artist id |
-| `HIT_RATE_BASELINE_S1` | Same formula, with the baseline playlist instead: the 20 artists with the most distinct listeners before W, minus artists the user already knows | Same |
-| `DISCOVERY_RATE` | Listens during W by evaluated users of artists absent from their history before W ÷ all their mapped listens during W | Same |
-| `LAST_LOADED_AT` | `MAX(_LOADED_AT)` of the listens used for W | — |
+| `HIT_RATE_BASELINE_S1` | Same formula and evaluated users, with up to 10 artists ranked by distinct listeners before W, excluding artists already known to each user | Same |
+| `DISCOVERY_RATE` | Distinct mapped listens during W by evaluated users for which **all** mapped artists are absent from that user's history before W ÷ all their distinct mapped listens during W | Unmapped listens; each multi-artist listen counts once |
+| `LESSER_KNOWN_RATE` | Distinct recommended artists with fewer than 1,000 English Wikipedia pageviews during W ÷ distinct recommended artists with seven observed days during W | Missing or partial Wikipedia weeks; NULL if none are covered |
+| `WIKI_COVERAGE_RATE` | Distinct recommended artists with seven observed Wikipedia days during W ÷ all distinct recommended artists for W | An artist appearing in several users' playlists counts once |
+| `LESSER_KNOWN_PAGEVIEWS_THRESHOLD` | Configurable exploratory threshold; default 1,000 via `lesser_known_pageviews_threshold` | Strictly fewer than the threshold qualifies |
+| `LAST_LOADED_AT` | `MAX(_LOADED_AT)` of the bronze listens at build time, as currently implemented | A load timestamp, not a guarantee that every source is complete |
 
 An artist hit (not a track hit): with about 320 listens a week, the exact recording is too rare to measure anything.
+
+### Multi-artist listens and Wikipedia conventions
+
+An artist association is expanded for co-listening, but an individual listen is identified by `listen_key`
+and counted once for `DISCOVERY_RATE`. A listen featuring a known artist and an unknown artist is **not**
+classified as a new discovery. A hit may match any mapped artist on the listen. Discovery describes observed
+listening; it does not show that the playlist caused the listener to discover an artist.
+
+Wikipedia days are deduplicated by artist and UTC date, then summed by artist and Monday-based UTC week.
+Only valid non-negative daily values are included. Seven observed days are required for the notoriety
+denominator; missing or partial observations do not become zero views. The threshold of 1,000 weekly views
+is an exploratory English-language attention proxy, not a universal definition of an unknown artist.
+The metric uses week W retrospectively and does not alter recommendation scores or ranking.
+
+Always publish `LESSER_KNOWN_RATE` with `WIKI_COVERAGE_RATE`: low coverage can bias the subset being measured.
+With no covered recommended artist, lesser-known rate is NULL and coverage is zero when recommendations exist.
+If there are no recommended artists, the denominator is empty and a NULL coverage must not be reported as zero.
 
 ### Acceptance tests
 
@@ -74,8 +96,8 @@ An artist hit (not a track hit): with about 320 listens a week, the exact record
 |---|---|---|
 | A1 | Rerun ingestion of a week | Bronze row counts per file unchanged, 0 duplicate listen (`ingestion/README.md`) |
 | A2 | Freshness | `LAST_LOADED_AT` less than 24 h before the Monday run |
-| A3 | Playlist shape | Each user of the week has positions 1 to 20, no duplicate recording, no artist from their history before W |
-| A4 | Value | On the evaluated weeks, `HIT_RATE_S1 ≥ HIT_RATE_BASELINE_S1`; otherwise the decision rule says: fall back to popularity |
+| A3 | Playlist shape | Each eligible user has positions 1 to 10, 10 distinct artists and no duplicate recording, with no artist from their observed history before W; a shorter playlist must be reported as incomplete |
+| A4 | Value | On the evaluated weeks, `HIT_RATE_S1 ≥ HIT_RATE_BASELINE_S1`; otherwise value is not demonstrated and the head of product must decide the next action. No automatic baseline switch is implemented |
 
 ## 4. Prototype evidence (2026-11-03)
 
@@ -93,13 +115,15 @@ not the Airflow replay or a fresh extraction from a changing API. Full query IDs
 `docs/evidence/2026-11-03_three_sources_replay.json` and the corresponding images.
 
 On this local extract, 965 of 8,003 listens have no artist mapping (12.06%). Among 1,278 artists with a
-Wikidata link, 1,234 have pageviews for each of the seven days (96.56%). These are sample measurements,
+Wikidata link, 1,234 have pageviews for each of the seven days (96.56%). This extraction coverage uses artists
+with a Wikidata link as its denominator; it is distinct from recommendation-level `WIKI_COVERAGE_RATE`.
+These are sample measurements,
 not population estimates. An artist absent from the observed history is not necessarily an artist the user
 has never heard in their lifetime.
 
-A2-A4, the recommendation gain, and the production dbt build remain to be measured. A valid S+1 evaluation
-needs training data before the target week and a complete evaluation week. The team still needs to confirm
-the commercial choice, metric definitions, and API-versus-dump decision. Hashing user names from silver
+A2-A4 were not established by this first single-week ingestion proof. A valid S+1 evaluation needs training
+data before the target week and a complete evaluation week; the later measurements are described below.
+The team still needs to confirm the commercial choice and API-versus-dump decision. Hashing user names from silver
 pseudonymizes identifiers; it does not by itself guarantee anonymity.
 
 ### Two-week extension and measured local S+1 result
@@ -111,11 +135,26 @@ The earlier table remains the first, single-week snapshot.
 
 Hugo PR4 (`cd28e33`) was built locally on these real extracts with training starting October 19,
 target week October 26, and evaluation ending November 2: 12 models, 13 tests and the hook passed.
-For 25 evaluated users, hit rate was **48% versus 56% for popularity**, and discovery rate was 100%.
-A4 is therefore **not met on this sample**; apply the agreed popularity fallback or review the rule
-before presenting a recommendation gain. This local result is not a production dbt result.
+For 25 evaluated users, hit rate was **48% versus 56% for popularity**. A4 is therefore **not met on this
+sample**: no superiority or recommendation gain is demonstrated. The ranking remains co-listening;
+automatic switching to the popularity baseline is not implemented. This local result is not a production dbt result.
 
-The build produced 250 playlist rows (10 per user); A3 above specifies 20. The team must align
-the implemented playlist size and business contract. Wikipedia is loaded in bronze but is not
-consumed by the current dbt models. Production dbt, Airflow replay and an actual cloud incident
-still require the operations owner's validation. See the dated handoff in `docs/evidence/`.
+The build produced 250 playlist rows (10 per user), consistent with the agreed size. Its historical
+discovery rate of 100% measured recommended artists absent from history, which holds by construction.
+That number is superseded by the listening-based definition above and must not be used for the new metric.
+The dated evidence files are preserved as historical records of that version.
+
+### Updated discovery and Wikipedia evidence from Hugo
+
+Hugo's `part2/wiki-discovery` revision `c002a7e` consumes Wikipedia in dbt and reports, for the same 25 users
+and 250 recommendations: discovery **38.1643%**, lesser-known rate **1.1364%** (1 of 88 distinct recommended
+artists), and Wikipedia coverage **100%** (88 of 88 artists with seven observed days). The threshold is
+1,000 weekly English Wikipedia pageviews. Hit rate remains **48% versus 56%** for popularity.
+
+Sources on that revision:
+[Wikipedia metrics](https://github.com/Elimane29/vayba-data-platform/blob/c002a7e/dbt/evidence/wiki_cloud_metrics.json)
+and [final cloud checks](https://github.com/Elimane29/vayba-data-platform/blob/c002a7e/dbt/evidence/final_cloud_checks.json).
+The latter distinguishes a successful development dbt build from publication of two compiled models in
+shared GOLD; that publication is not a new complete production dbt/Airflow run. Its incident proof concerns
+isolated `DEV_HUGO_INCIDENT_*` schemas. The complete Airflow replay still requires operations validation.
+These are Hugo's recorded executions, reviewed for this document; they were not rerun by Yanis.

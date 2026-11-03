@@ -2,7 +2,7 @@ version: 2
 sources:
   - name: bronze
     database: "{{ target.database }}"
-    schema: "{{ var('bronze_schema', 'DEV_HUGO_BRONZE') }}"
+    schema: "{{ var('bronze_schema', 'BRONZE' if target.name == 'prod' else 'DEV_HUGO_BRONZE') }}"
     tables:
       - name: LISTENS_RAW
       - name: MB_ARTISTS_RAW

@@ -52,3 +52,23 @@ Le hit rate S+1 mesure la proportion de profils éligibles ayant écouté au moi
 Résultats : 6652 écoutes bronze, 915 artistes, 6125 écoutes silver, 527 écoutes en quarantaine, 6615 liens écoute-artiste et 40 recommandations. Sur quatre profils et une semaine, le hit rate vaut 0,75 contre 0,50 pour la popularité. Ces résultats ne prouvent pas une supériorité générale.
 
 Les contrôles locaux couvrent le rejeu, les fichiers API sans utilisateur dans RAW, l'absence de fuite temporelle, un exemple calculé à la main et un échec volontaire de `no_unknown_artists`. Les genres et les profils manuels restent à intégrer. Le chargeur manuel Snowflake respecte les quatre colonnes bronze, mais sa commande cloud n'a pas été exécutée : le chargement réalisé utilisait Snowsight.
+
+## Cible de production pour Airflow
+
+La commande --target prod lit les deux sources dans VAYBA.BRONZE, construit les modèles directement dans VAYBA.SILVER et VAYBA.GOLD. Elle écrit le journal DBT_RESULTS dans VAYBA.OPS. Elle lit le rôle et le warehouse dans SNOWFLAKE_ROLE et SNOWFLAKE_WAREHOUSE, sans valeur par défaut pour prod. Le compte, l'utilisateur et le chemin de clé viennent également des variables d'environnement. La cible par défaut reste local.
+
+Le script dbt/tools/setup_prod.sql prépare les schémas partagés, le stage et les trois tables bronze, les droits d'ingestion de VAYBA_ELIMANE et VAYBA_YANIS, les droits de transformation de VAYBA_ELIMANE et la lecture du gold pour VAYBA_DASH_READ. Il nécessite une approbation humaine avant exécution. Il n'a pas été exécuté pendant cette validation. OPS doit exister avant un build prod : le hook n'y crée pas de schéma.
+
+```bash
+python dbt/tools/check_targets.py
+export SNOWFLAKE_ROLE=VAYBA_ELIMANE
+export SNOWFLAKE_WAREHOUSE=VAYBA_WH
+dbt build --project-dir dbt --profiles-dir dbt --target prod --vars '{"history_start":"2026-09-21","week_start":"2026-10-26","test_end":"2026-11-02"}'
+```
+
+
+Les contrôles de routage sont hors ligne : trois cibles vérifiées, noms de schémas, source bronze, rôle et warehouse issus de l'environnement, et SQL de journalisation. Le build local du 3 novembre 2026 passe avec 12 modèles, 13 tests et une opération, soit 26 résultats sans erreur. Les preuves figurent dans evidence/target_routing.json et evidence/local_build_after_prod.json. Aucun build prod Snowflake n'est présenté comme exécuté.
+
+Le DAG actuellement sur main transmet week à l'ingestion, mais ne transmet pas les dates à dbt. Elimane doit synchroniser history_start, week_start et test_end avec les semaines réellement chargées, au moyen de --vars. Les valeurs par défaut restent celles du benchmark : 2026-09-21, 2026-10-26 et 2026-11-02. Charger une seule semaine sans historique fera échouer les contrôles de fenêtre. Une évaluation S+1 exige aussi une semaine de validation complète ; ne pas retirer le test pour afficher artificiellement un run réussi.
+
+Les incidents de développement utilisent --target dev et la variable bronze_schema=DEV_ELIMANE_BRONZE, avec VAYBA_DEV_SCHEMA=DEV_ELIMANE. Ils ne doivent pas écrire dans les schémas partagés. La capture evidence/gcs_list_2026-11-03.jpg prouve uniquement la liste d'un fichier test GCS, pas un chargement des données métier.

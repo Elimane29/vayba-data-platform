@@ -7,7 +7,7 @@ vayba:
       schema: DEV_HUGO
       settings: {TimeZone: UTC}
       threads: 1
-    dev:
+    dev: &snowflake
       type: snowflake
       account: "{{ env_var('SNOWFLAKE_ACCOUNT', '') }}"
       user: "{{ env_var('SNOWFLAKE_USER', '') }}"
@@ -18,3 +18,12 @@ vayba:
       database: VAYBA
       schema: "{{ env_var('VAYBA_DEV_SCHEMA', 'DEV_HUGO') }}"
       threads: 1
+    prod:
+      <<: *snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_FILE') }}"
+      authenticator: "{{ env_var('SNOWFLAKE_AUTHENTICATOR', 'snowflake') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      schema: SILVER

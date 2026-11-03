@@ -144,7 +144,7 @@ day is enough: no night on-call.
 |---|---|---|
 | Elimane uploads to the landing bucket | Allowed | |
 | Hugo (in `readers`) uploads to the landing bucket | **Denied** (403) | |
-| Snowflake lists the stage | Allowed | |
+| Snowflake lists the stage | Allowed | Allowed: `LIST` and read of `test/test.json` with `VAYBA_ELIMANE`, no secondary role (Hugo, 2026-11-02) |
 | Dash read-only role reads `BRONZE` | **Denied** | |
 
 Hugo must be in `readers` in `terraform/terraform.tfvars`, applied, for the denied test to mean something.

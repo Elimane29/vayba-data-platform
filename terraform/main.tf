@@ -80,7 +80,7 @@ resource "google_storage_bucket" "landing" {
 resource "google_storage_bucket_iam_member" "uploader_write" {
   for_each = toset(var.uploaders)
   bucket   = google_storage_bucket.landing.name
-  role     = "roles/storage.objectCreator"
+  role     = "roles/storage.objectUser" # create, overwrite, delete; cannot change permissions
   member   = each.value
 }
 

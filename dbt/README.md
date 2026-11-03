@@ -57,7 +57,7 @@ Les contrôles locaux couvrent le rejeu, les fichiers API sans utilisateur dans 
 
 La commande --target prod lit les deux sources dans VAYBA.BRONZE, construit les modèles directement dans VAYBA.SILVER et VAYBA.GOLD. Elle écrit le journal DBT_RESULTS dans VAYBA.OPS. Elle lit le rôle et le warehouse dans SNOWFLAKE_ROLE et SNOWFLAKE_WAREHOUSE, sans valeur par défaut pour prod. Le compte, l'utilisateur et le chemin de clé viennent également des variables d'environnement. La cible par défaut reste local.
 
-Le script dbt/tools/setup_prod.sql prépare les schémas partagés, le stage et les trois tables bronze, les droits d'ingestion de VAYBA_ELIMANE et VAYBA_YANIS, les droits de transformation de VAYBA_ELIMANE et la lecture du gold pour VAYBA_DASH_READ. Il nécessite une approbation humaine avant exécution. Il n'a pas été exécuté pendant cette validation. OPS doit exister avant un build prod : le hook n'y crée pas de schéma.
+Le script dbt/tools/setup_prod.sql prépare les schémas partagés, le stage et les trois tables bronze, les droits d'ingestion de VAYBA_ELIMANE et VAYBA_YANIS, les droits de transformation de VAYBA_ELIMANE et la lecture du gold pour VAYBA_DASH_READ. Il nécessite une approbation humaine avant exécution. OPS doit exister avant un build prod : le hook n'y crée pas de schéma.
 
 ```bash
 python dbt/tools/check_targets.py
@@ -72,3 +72,7 @@ Les contrôles de routage sont hors ligne : trois cibles vérifiées, noms de sc
 Le DAG actuellement sur main transmet week à l'ingestion, mais ne transmet pas les dates à dbt. Elimane doit synchroniser history_start, week_start et test_end avec les semaines réellement chargées, au moyen de --vars. Les valeurs par défaut restent celles du benchmark : 2026-09-21, 2026-10-26 et 2026-11-02. Charger une seule semaine sans historique fera échouer les contrôles de fenêtre. Une évaluation S+1 exige aussi une semaine de validation complète ; ne pas retirer le test pour afficher artificiellement un run réussi.
 
 Les incidents de développement utilisent --target dev et la variable bronze_schema=DEV_ELIMANE_BRONZE, avec VAYBA_DEV_SCHEMA=DEV_ELIMANE. Ils ne doivent pas écrire dans les schémas partagés. La capture evidence/gcs_list_2026-11-03.jpg prouve uniquement la liste d'un fichier test GCS, pas un chargement des données métier.
+
+### État de la préparation partagée
+
+Préparation partagée le 3 novembre 2026 : les schémas GOLD, OPS, SILVER, et BRONZE sont prêts, ainsi que le stage GCS et les trois tables BRONZE. Les droits d'ingestion de Yanis et Elimane, les droits de transformation d'Elimane, et la lecture future du GOLD par Dash ont été affectés. La dernière attribution a été faite avec l'aide de SECURITYADMIN, nécessaire pour les droits futurs dans un schéma standard. Aucune exécution dbt prod n'a encore été lancée. Les preuves peuvent être trouvées dans evidence/prod_setup.json.

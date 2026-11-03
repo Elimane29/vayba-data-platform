@@ -1,0 +1,82 @@
+{
+  "cloud_dbt_journal": [
+    [
+      "3bff2a24-4d49-46bb-81b7-f7761b86ac62",
+      "pass",
+      14
+    ],
+    [
+      "3bff2a24-4d49-46bb-81b7-f7761b86ac62",
+      "success",
+      13
+    ]
+  ],
+  "cloud_dbt_journal_query_id": "01c82c11-040c-cd40-0034-1e6b001ad036",
+  "bronze_counts": {
+    "LISTENS_RAW": 16447,
+    "MB_ARTISTS_RAW": 2478,
+    "WIKI_PAGEVIEWS_RAW": 1234
+  },
+  "distinct_recommended_artists": 88,
+  "playlist_identical_to_validated_dev": true,
+  "production_metrics": [
+    {
+      "WEEK_START": "2026-10-26",
+      "USERS_EVALUATED": 25,
+      "HIT_RATE_S1": "0.480000",
+      "HIT_RATE_BASELINE_S1": "0.560000",
+      "DISCOVERY_RATE": "0.381643",
+      "LAST_LOADED_AT": "2026-11-03 11:58:53.408000-08:00",
+      "LESSER_KNOWN_RATE": "0.011364",
+      "WIKI_COVERAGE_RATE": "1.000000",
+      "LESSER_KNOWN_PAGEVIEWS_THRESHOLD": 1000
+    }
+  ],
+  "production_metrics_query_id": "01c82c11-040c-cd3f-0034-1e6b001a805a",
+  "new_version_execution": {
+    "DEV_dbt_build_total_including_hook": 28,
+    "production_publication": "two compiled models executed with VAYBA_ELIMANE; not a new full production dbt/Airflow run",
+    "playlist_size": 10
+  },
+  "dash": {
+    "role": "VAYBA_DASH_READ",
+    "secondary_roles": "NONE",
+    "gold_rows": 250,
+    "profiles": 25,
+    "playlist_view": "PASS",
+    "metrics_callback": "PASS",
+    "denied": [
+      {
+        "check": "bronze_read",
+        "denied": true,
+        "error_code": 2003,
+        "query_id": "01c82c09-040c-cd51-0034-1e6b001b7036"
+      },
+      {
+        "check": "persistent_gold_insert",
+        "denied": true,
+        "error_code": 3001,
+        "query_id": "01c82c09-040c-cd47-0034-1e6b001b3032"
+      }
+    ]
+  },
+  "incident": {
+    "target": "Snowflake DEV_HUGO_INCIDENT_*",
+    "artist_mbid": "00034ede-a1f1-4219-be39-02f36853373e",
+    "removed_dimension_rows": 1,
+    "delete_query_id": "01c82bfb-040c-cb04-0034-1e6b001a504a",
+    "restore_query_id": "01c82bfb-040c-c644-0034-1e6b001a9042",
+    "before": "PASS",
+    "injected": "FAIL expected",
+    "restored": "PASS",
+    "production_modified": false
+  },
+  "gcs": {
+    "principal": "hvanzuylen@albertschool.com",
+    "operation": "gcloud storage cp /tmp/hugo.json gs://vayba-elimane-2026-landing/test/hugo.json",
+    "permission_denied": "storage.objects.create",
+    "files_copied": 0,
+    "method": "actual Google Cloud Shell",
+    "screenshot": "dashboard/evidence/gcs_write_denied.png"
+  }
+}

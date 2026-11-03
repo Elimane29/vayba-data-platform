@@ -2,7 +2,7 @@
   "execution_target": "offline dbt parse and Jinja checks; no Snowflake execution",
   "targets": {
     "prod": {
-      "models": 12,
+      "models": 13,
       "schemas": [
         "GOLD",
         "SILVER"
@@ -11,7 +11,7 @@
       "log_schema": "OPS"
     },
     "dev": {
-      "models": 12,
+      "models": 13,
       "schemas": [
         "DEV_ROUTING_CHECK_GOLD",
         "DEV_ROUTING_CHECK_SILVER"
@@ -20,7 +20,7 @@
       "log_schema": "DEV_ROUTING_CHECK_OPS"
     },
     "local": {
-      "models": 12,
+      "models": 13,
       "schemas": [
         "DEV_HUGO_GOLD",
         "DEV_HUGO_SILVER"

@@ -15,7 +15,15 @@ from docker.types import Mount
 IMAGE = "vayba-pipeline:1.0.0"
 
 # The week to process: the Monday before the run, or the "week" parameter of a manual run.
-WEEK = "{{ params.week or data_interval_start.start_of('week').to_date_string() }}"
+WEEK_EXPR = "params.week or data_interval_start.start_of('week').to_date_string()"
+WEEK = "{{ " + WEEK_EXPR + " }}"
+
+# dbt dates (part 2): recommend from the previous week's history, evaluate on the processed week.
+DBT_VARS = (
+    '{"history_start": "{{ macros.ds_add(' + WEEK_EXPR + ', -7) }}", '
+    '"week_start": "' + WEEK + '", '
+    '"test_end": "{{ macros.ds_add(' + WEEK_EXPR + ', 7) }}"}'
+)
 
 ENV = {
     "SNOWFLAKE_ACCOUNT": os.environ["SNOWFLAKE_ACCOUNT"],
@@ -84,6 +92,9 @@ with DAG(
     wikipedia = pipeline_task("ingest_wikipedia", f"python ingestion/run.py --source wikipedia --week {WEEK}")
 
     # Needs the "prod" target in dbt/profiles.yml (part 2), writing to SILVER and GOLD
-    dbt_build = pipeline_task("dbt_build", "dbt build --project-dir dbt --profiles-dir dbt --target prod")
-
+    dbt_build = pipeline_task(
+        "dbt_build",
+        "dbt build --project-dir dbt --profiles-dir dbt --target prod --vars '" + DBT_VARS + "'",
+    )
+    
     listenbrainz >> musicbrainz >> wikipedia >> dbt_build

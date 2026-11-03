@@ -41,7 +41,7 @@ def fetch_gold():
         data = {}
         for name, columns, order in [
             ('playlist', 'WEEK_START,USER_KEY,POSITION,RECORDING_MBID,TRACK_NAME,ARTIST_MBID,ARTIST_NAME,BECAUSE_ARTIST_NAME,SCORE', 'WEEK_START DESC,USER_KEY,POSITION'),
-            ('metrics', 'WEEK_START,USERS_EVALUATED,HIT_RATE_S1,HIT_RATE_BASELINE_S1,DISCOVERY_RATE,LAST_LOADED_AT', 'WEEK_START DESC'),
+            ('metrics', '*', 'WEEK_START DESC'),
         ]:
             table = 'PLAYLIST_HEBDO' if name == 'playlist' else 'METRICS_HEBDO'
             # ponytail: 10,000 rows cover the prototype; paginate for a larger deployment.
@@ -86,6 +86,14 @@ def render(view, week, user, data):
     figure.update_layout(xaxis={'range': [0, 1.12], 'tickformat': '.0%'}, yaxis={'autorange': 'reversed'},
                          margin={'l': 100, 'r': 45, 't': 20, 'b': 35}, height=230,
                          paper_bgcolor='white', plot_bgcolor='white', font={'family': 'Arial', 'color': '#24364b'})
+    wiki_cards = []
+    if 'LESSER_KNOWN_RATE' in metric:
+        lesser = metric['LESSER_KNOWN_RATE']
+        threshold = int(metric['LESSER_KNOWN_PAGEVIEWS_THRESHOLD'])
+        wiki_cards = [
+            card(TEXT['lesser_known'], '—' if lesser is None else f'{float(lesser):.0%}', TEXT['lesser_known_caption'].format(threshold=threshold)),
+            card(TEXT['wiki_coverage'], f"{float(metric['WIKI_COVERAGE_RATE'] or 0):.0%}", TEXT['wiki_coverage_caption']),
+        ]
     loaded = datetime.fromisoformat(metric['LAST_LOADED_AT']).astimezone(timezone.utc).strftime('%d/%m/%Y %H:%M UTC') if metric['LAST_LOADED_AT'] else '—'
     return html.Section([
         html.Div([html.H2(TEXT['metrics_title']), html.P(TEXT['metrics_intro'])], className='section-head'),
@@ -94,7 +102,7 @@ def render(view, week, user, data):
             card(TEXT['hit_rate'], f'{rate:.0%}', TEXT['hit_caption']),
             card(TEXT['baseline'], f'{baseline:.0%}', TEXT['baseline_caption']),
             card(TEXT['discovery'], f"{float(metric['DISCOVERY_RATE'] or 0):.0%}", TEXT['discovery_caption']),
-        ], className='cards'),
+        ] + wiki_cards, className='cards'),
         html.Div([html.H3(TEXT['comparison']), dcc.Graph(figure=figure, config={'displayModeBar': False})], className='chart'),
         html.P(TEXT['sample_limit'], className='note'),
         html.P([TEXT['loaded_at'], ' ', loaded], className='loaded'),

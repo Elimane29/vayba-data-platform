@@ -1,8 +1,8 @@
 {
   "role": "VAYBA_DASH_READ",
   "secondary_roles": "NONE",
-  "gold_rows": 40,
-  "profiles": 4,
+  "gold_rows": 250,
+  "profiles": 25,
   "playlist_view": "PASS",
   "metrics_callback": "PASS",
   "denied": [
@@ -10,13 +10,13 @@
       "check": "bronze_read",
       "denied": true,
       "error_code": 2003,
-      "query_id": "01c824c6-040c-bd75-0034-1e6b001743da"
+      "query_id": "01c82c09-040c-cd51-0034-1e6b001b7036"
     },
     {
       "check": "persistent_gold_insert",
       "denied": true,
       "error_code": 3001,
-      "query_id": "01c824c6-040c-bd77-0034-1e6b0016f39a"
+      "query_id": "01c82c09-040c-cd47-0034-1e6b001b3032"
     }
   ]
 }

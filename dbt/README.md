@@ -34,6 +34,8 @@ export VAYBA_DEV_SCHEMA="DEV_HUGO_DBT"
 dbt build --project-dir dbt --profiles-dir dbt --target dev
 
 python dbt/tools/check_targets.py
+export SNOWFLAKE_USER=ELIMANE_DIALLO
+export SNOWFLAKE_PRIVATE_KEY_FILE="/chemin/local/cle-elimane.p8"
 export SNOWFLAKE_ROLE=VAYBA_ELIMANE
 export SNOWFLAKE_WAREHOUSE=VAYBA_WH
 dbt build --project-dir dbt --profiles-dir dbt --target prod --vars '{"history_start":"2026-10-19","week_start":"2026-10-26","test_end":"2026-11-02"}'

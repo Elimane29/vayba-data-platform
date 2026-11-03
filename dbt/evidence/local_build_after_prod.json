@@ -1,0 +1,9 @@
+{
+  "invocation_id": "f81672fe-3054-448e-9d9a-8ce0924960c1",
+  "generated_at": "2026-11-03T08:16:51.166782Z",
+  "target": "local DuckDB",
+  "results_passed": 26,
+  "models": 12,
+  "tests": 13,
+  "prod_executed": false
+}

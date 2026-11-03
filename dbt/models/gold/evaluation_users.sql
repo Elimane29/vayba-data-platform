@@ -3,7 +3,7 @@ with future as (
  where listened_at >= cast('{{ var("week_start", "2026-10-26") }}' as timestamp)
  and listened_at < cast('{{ var("test_end", "2026-11-02") }}' as timestamp)
 ), eligible as (
- select distinct u.user_key from {{ ref('user_artists') }} u join future f on u.user_key=f.user_key
+ select distinct u.user_key from {{ ref('playlist_hebdo') }} u join future f on u.user_key=f.user_key
 ), recommendations as (
  select user_key, artist_mbid from {{ ref('playlist_hebdo') }}
 ), baseline as (

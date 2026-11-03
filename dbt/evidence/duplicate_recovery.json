@@ -1,0 +1,13 @@
+{
+  "executed_at_utc": "2026-11-02T16:08:16.724520+00:00",
+  "execution_target": "local DuckDB; disposable copy; original database unchanged",
+  "bronze_before": 6652,
+  "bronze_after_injection": 6653,
+  "silver_before": 6125,
+  "silver_after": 6125,
+  "silver_distinct_keys_after": 6125,
+  "dbt_build": "PASS",
+  "gold_unchanged": true,
+  "silver_unique_test": "PASS; the duplicate was removed upstream",
+  "expected_quality_failure": false
+}

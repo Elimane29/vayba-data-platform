@@ -1,0 +1,35 @@
+{
+  "verified_at_utc": "2026-11-03T08:52:55.548074+00:00",
+  "script": "dbt/tools/setup_prod.sql",
+  "script_sha256": "f0161dc197aeda803c995a73c9b6a2b67308f07cc02fd1b2d326bf243797fe24",
+  "shared_schemas": [
+    "BRONZE",
+    "GOLD",
+    "OPS",
+    "SILVER"
+  ],
+  "bronze_tables": 3,
+  "bronze_columns": 12,
+  "elimane_bronze_dml_grants": 9,
+  "yanis_bronze_dml_grants": 9,
+  "elimane_transform_schema_grants": 6,
+  "dash_future_gold_select_grants": 1,
+  "stage_url": "gcs://vayba-elimane-2026-landing/",
+  "grant_administration_role": "SECURITYADMIN",
+  "initial_future_grant_under_sysadmin_failed": true,
+  "future_grant_completed_under_securityadmin": true,
+  "new_global_role_grants": false,
+  "yanis_access_check": {
+    "active_role": "VAYBA_YANIS",
+    "secondary_roles_setting": "NONE",
+    "test_files_listed": 1,
+    "listens_rows": 0,
+    "artist_rows": 0,
+    "list_query_id": "01c82912-040c-c3cb-0034-1e6b0018a05a",
+    "zero_row_insert_query_id": "01c82912-040c-c642-0034-1e6b00188066",
+    "zero_row_delete_succeeded": true,
+    "rows_changed_by_checks": 0
+  },
+  "prod_build_executed": false,
+  "dash_future_select_functionally_tested_on_prod_table": false
+}

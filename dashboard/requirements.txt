@@ -1,0 +1,2 @@
+dash==4.5.0
+snowflake-connector-python==4.8.0

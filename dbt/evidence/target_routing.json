@@ -1,0 +1,32 @@
+{
+  "execution_target": "offline dbt parse and Jinja checks; no Snowflake execution",
+  "targets": {
+    "prod": {
+      "models": 12,
+      "schemas": [
+        "GOLD",
+        "SILVER"
+      ],
+      "bronze": "BRONZE",
+      "log_schema": "OPS"
+    },
+    "dev": {
+      "models": 12,
+      "schemas": [
+        "DEV_ROUTING_CHECK_GOLD",
+        "DEV_ROUTING_CHECK_SILVER"
+      ],
+      "bronze": "DEV_HUGO_BRONZE",
+      "log_schema": "DEV_ROUTING_CHECK_OPS"
+    },
+    "local": {
+      "models": 12,
+      "schemas": [
+        "DEV_HUGO_GOLD",
+        "DEV_HUGO_SILVER"
+      ],
+      "bronze": "DEV_HUGO_BRONZE"
+    }
+  },
+  "role_and_warehouse_from_environment": true
+}

@@ -1,0 +1,17 @@
+{
+  "check": "SQLGlot syntax parsing only; not Snowflake execution",
+  "models": [
+    "dbt/models/gold/evaluation_users.sql",
+    "dbt/models/gold/metrics_hebdo.sql",
+    "dbt/models/gold/neighbors.sql",
+    "dbt/models/gold/playlist_hebdo.sql",
+    "dbt/models/gold/ranked_artists.sql",
+    "dbt/models/silver/listen_artists.sql",
+    "dbt/models/silver/listens_checked.sql",
+    "dbt/models/silver/listens_quarantine.sql",
+    "dbt/models/silver/silver_artists.sql",
+    "dbt/models/silver/silver_listens.sql",
+    "dbt/models/silver/train_listens.sql",
+    "dbt/models/silver/user_artists.sql"
+  ]
+}

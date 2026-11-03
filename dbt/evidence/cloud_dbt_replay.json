@@ -1,0 +1,18 @@
+{
+  "replay_invocation_id": "6970f29b-b63d-4a44-a2a5-d66fd8db6dac",
+  "all_26_results_passed": true,
+  "checks": [
+    {
+      "table": "PLAYLIST_HEBDO",
+      "identical": true,
+      "rows": 40,
+      "query_id": "01c824ca-040c-bd7b-0034-1e6b0016d33a"
+    },
+    {
+      "table": "METRICS_HEBDO",
+      "identical": true,
+      "rows": 1,
+      "query_id": "01c824ca-040c-bd76-0034-1e6b001753e2"
+    }
+  ]
+}

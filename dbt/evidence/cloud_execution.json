@@ -1,0 +1,35 @@
+{
+  "captured_at_utc": "2026-11-02T10:54:40.933386+00:00",
+  "execution": "Snowflake SQL run manually in Snowsight, from the dbt models; dbt Core cloud command not yet run",
+  "warehouse": "VAYBA_WH",
+  "database": "VAYBA",
+  "schemas": [
+    "DEV_HUGO_BRONZE",
+    "DEV_HUGO_SILVER",
+    "DEV_HUGO_GOLD",
+    "DEV_HUGO_OPS"
+  ],
+  "source": "CSV exported from Snowflake result grid",
+  "results": {
+    "01 Ecoutes bronze": "6652",
+    "02 Artistes bronze": "915",
+    "03 Ecoutes silver": "6125",
+    "04 Ecoutes en quarantaine": "527",
+    "05 Associations ecoute-artiste": "6615",
+    "06 Morceaux recommandes": "40",
+    "07 Utilisateurs evalues": "4",
+    "08 Semaine evaluee": "2026-10-26",
+    "09 Hit rate recommandations": "0.750000",
+    "10 Hit rate popularite": "0.500000",
+    "11 Erreurs controles qualite": "0",
+    "12 Differences apres rejeu": "0",
+    "13 Champs obligatoires invalides": "0",
+    "14 Ecoutes construction": "4858",
+    "15 Ecoutes validation": "1267"
+  },
+  "ingestion": "Internal stage FIXTURE_STAGE, then COPY INTO; GCS not used in this development run",
+  "statement_file": "tools/run_models_snowsight.sql",
+  "statement_sha256": "e42326743af65d10c6c1c4cc177f9d027efe6dbba006aaa2b953d5b4260310db",
+  "query_id": "01c823eb-040c-bd7a-0034-1e6b0016b172",
+  "query_history_url": "https://app.snowflake.com/us-west-2/azb24749/#/compute/history/queries/01c823eb-040c-bd7a-0034-1e6b0016b172/detail?autoRefreshInSeconds=0"
+}

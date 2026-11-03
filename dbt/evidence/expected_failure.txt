@@ -1,0 +1,5 @@
+[0m12:31:28  14 of 25 START test no_unknown_artists ......................................... [RUN]
+[0m12:31:28  14 of 25 FAIL 2 no_unknown_artists ............................................. [[31mFAIL 2[0m in 0.01s]
+[0m12:31:28  [31mFailure in test no_unknown_artists (tests/no_unknown_artists.sql)[0m
+[0m12:31:28    compiled code at target/compiled/vayba_dbt/tests/no_unknown_artists.sql
+[0m12:31:28  Done. PASS=17 WARN=0 ERROR=1 SKIP=8 NO-OP=0 TOTAL=26

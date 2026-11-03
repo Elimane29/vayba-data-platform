@@ -1,0 +1,336 @@
+{
+  "executed_at_utc": "2026-11-02T14:18:38.385402Z",
+  "invocation_id": "53c9097c-1de7-4b17-a955-181ab60a548b",
+  "dbt_version": "1.11.16",
+  "elapsed_seconds": 29.637757301330566,
+  "target": "Snowflake VAYBA DEV_HUGO_DBT_*",
+  "results": [
+    {
+      "node": "model.vayba_dbt.listens_checked",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.688884973526001,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd77-0034-1e6b0016f36e"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.silver_artists",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.5187809467315674,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b0017297e"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.listens_quarantine",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.6227948665618896,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-b863-0034-1e6b0016e38a"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.silver_listens",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.58479905128479,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd7a-0034-1e6b0016b386"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.not_null_silver_artists_artist_mbid.4f292f7aea",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 1.0251519680023193,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b00172982"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.unique_silver_artists_artist_mbid.cfc2782d17",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.6187918186187744,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd73-0034-1e6b0016c37a"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.not_null_silver_listens_listen_key.0936ef6f29",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.6626300811767578,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b00172986"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.not_null_silver_listens_listened_at.71f235c6fc",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.4820091724395752,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd77-0034-1e6b0016f372"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.not_null_silver_listens_user_key.e12ffed045",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.343782901763916,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b0017298a"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.unique_silver_listens_listen_key.c2f560b360",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.35944604873657227,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd77-0034-1e6b0016f376"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.window_complete",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 1.5280508995056152,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd76-0034-1e6b0017538e"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.listen_artists",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.4770081043243408,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b0017298e"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.train_listens",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.48251795768737793,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd77-0034-1e6b0016f37a"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.no_unknown_artists",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.8944730758666992,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd7a-0034-1e6b0016b38a"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.user_artists",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 0.7447268962860107,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd76-0034-1e6b00175392"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.neighbors",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 2.023021936416626,
+      "adapter_response": {
+        "_message": "SUCCESS 12",
+        "code": "SUCCESS",
+        "rows_affected": 12,
+        "query_id": "01c824ba-040c-bd7a-0034-1e6b0016b38e",
+        "rows_inserted": 12,
+        "rows_deleted": 0,
+        "rows_updated": 0,
+        "rows_duplicates": 0
+      }
+    },
+    {
+      "node": "model.vayba_dbt.ranked_artists",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 3.212052822113037,
+      "adapter_response": {
+        "_message": "SUCCESS 2163",
+        "code": "SUCCESS",
+        "rows_affected": 2163,
+        "query_id": "01c824ba-040c-b863-0034-1e6b0016e38e",
+        "rows_inserted": 2163,
+        "rows_deleted": 0,
+        "rows_updated": 0,
+        "rows_duplicates": 0
+      }
+    },
+    {
+      "node": "model.vayba_dbt.playlist_hebdo",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 2.829030990600586,
+      "adapter_response": {
+        "_message": "SUCCESS 40",
+        "code": "SUCCESS",
+        "rows_affected": 40,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b00172992",
+        "rows_inserted": 40,
+        "rows_deleted": 0,
+        "rows_updated": 0,
+        "rows_duplicates": 0
+      }
+    },
+    {
+      "node": "test.vayba_dbt.no_known_artist_recommended",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 1.1857988834381104,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd7b-0034-1e6b0016d306"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.not_null_playlist_hebdo_artist_name.ee61e16b1a",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.44176411628723145,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd73-0034-1e6b0016c37e"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.not_null_playlist_hebdo_recording_mbid.bf6351bd27",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.35093188285827637,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd7a-0034-1e6b0016b392"
+      }
+    },
+    {
+      "node": "test.vayba_dbt.playlist_grain",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.42324376106262207,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd76-0034-1e6b00175396"
+      }
+    },
+    {
+      "node": "model.vayba_dbt.evaluation_users",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 2.017753839492798,
+      "adapter_response": {
+        "_message": "SUCCESS 4",
+        "code": "SUCCESS",
+        "rows_affected": 4,
+        "query_id": "01c824ba-040c-bb92-0034-1e6b00172996",
+        "rows_inserted": 4,
+        "rows_deleted": 0,
+        "rows_updated": 0,
+        "rows_duplicates": 0
+      }
+    },
+    {
+      "node": "model.vayba_dbt.metrics_hebdo",
+      "status": "success",
+      "failures": null,
+      "execution_seconds": 1.4889838695526123,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-bd76-0034-1e6b0017539a",
+        "rows_inserted": 1,
+        "rows_deleted": 0,
+        "rows_updated": 0,
+        "rows_duplicates": 0
+      }
+    },
+    {
+      "node": "test.vayba_dbt.valid_rates",
+      "status": "pass",
+      "failures": 0,
+      "execution_seconds": 0.3868248462677002,
+      "adapter_response": {
+        "_message": "SUCCESS 1",
+        "code": "SUCCESS",
+        "rows_affected": 1,
+        "query_id": "01c824ba-040c-b863-0034-1e6b0016e392"
+      }
+    },
+    {
+      "node": "operation.vayba_dbt.vayba_dbt-on-run-end-0",
+      "status": "success",
+      "failures": 0,
+      "execution_seconds": 2.196023,
+      "adapter_response": {}
+    }
+  ]
+}

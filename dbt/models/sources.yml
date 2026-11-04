@@ -6,3 +6,4 @@ sources:
     tables:
       - name: LISTENS_RAW
       - name: MB_ARTISTS_RAW
+      - name: WIKI_PAGEVIEWS_RAW

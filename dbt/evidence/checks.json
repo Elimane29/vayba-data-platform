@@ -5,15 +5,18 @@
     "users_evaluated": 4,
     "hit_rate_s1": 0.75,
     "hit_rate_baseline_s1": 0.5,
-    "discovery_rate": 1.0,
-    "last_loaded_at": "2026-11-02 10:00:34+01:00"
+    "discovery_rate": 0.27387529597474347,
+    "last_loaded_at": "2026-11-02 10:00:34+01:00",
+    "lesser_known_rate": null,
+    "wiki_coverage_rate": 0.0,
+    "lesser_known_pageviews_threshold": 1000
   },
   "playlist_rows": 40,
   "no_temporal_leakage": "PASS",
   "api_source_filename_compatibility": "PASS: 6652 API-shaped listens produce identical gold results",
   "hand_calculated_acceptance": "PASS: A -> Z; score=2/3; invalid listen quarantined",
   "injected_missing_artist": "PASS: no_unknown_artists failed as expected",
-  "executed_at_utc": "2026-11-02T12:31:30.633687+00:00",
+  "executed_at_utc": "2026-11-03T21:32:32.259037+00:00",
   "execution_target": "local DuckDB; Snowflake not executed",
   "files_sha256": {
     "listens_raw.jsonl": "f343836268b3a1b9e16e4f23f989e6889599da45a34b36d272f63a2b38fefe27",

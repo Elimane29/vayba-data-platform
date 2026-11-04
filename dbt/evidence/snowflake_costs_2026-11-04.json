@@ -1,0 +1,24 @@
+{
+  "snapshot_utc": "2026-11-04 15:43 UTC",
+  "start_utc": "2026-11-01 00:00 UTC",
+  "role": "ACCOUNTADMIN",
+  "source": "SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY",
+  "credits_used": {
+    "VAYBA_WH": "1.861716116",
+    "COMPUTE_WH": "0.808640767",
+    "CLOUD_SERVICES_ONLY": "0.003429445"
+  },
+  "credit_price": {
+    "source": "SNOWFLAKE.ORGANIZATION_USAGE.RATE_SHEET_DAILY",
+    "effective_date": "2026-11-03",
+    "service_type": "WAREHOUSE_METERING",
+    "service_level": "Enterprise",
+    "currency": "USD",
+    "effective_rate": "3.00"
+  },
+  "VAYBA_WH_gross_valuation_USD": "5.58514834800",
+  "valuation_is_invoice": false,
+  "scope": "warehouse metering; excludes GCS and storage; cloud-services billing adjustments not applied",
+  "cost_management_account_MTD_display_USD": "7.3",
+  "account_MTD_is_project_cost": false
+}

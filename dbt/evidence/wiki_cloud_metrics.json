@@ -1,0 +1,15 @@
+{
+  "metrics": {
+    "WEEK_START": "2026-10-26",
+    "USERS_EVALUATED": 25,
+    "HIT_RATE_S1": "0.480000",
+    "HIT_RATE_BASELINE_S1": "0.560000",
+    "DISCOVERY_RATE": "0.381643",
+    "LAST_LOADED_AT": "2026-11-03 11:58:53.408000-08:00",
+    "LESSER_KNOWN_RATE": "0.011364",
+    "WIKI_COVERAGE_RATE": "1.000000",
+    "LESSER_KNOWN_PAGEVIEWS_THRESHOLD": 1000
+  },
+  "wiki_artist_weeks": 1234,
+  "playlist_rows": 250
+}

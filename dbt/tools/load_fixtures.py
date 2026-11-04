@@ -1,7 +1,7 @@
 """Load Yanis's JSONL envelopes into DEV_HUGO_BRONZE, ignoring exact replays."""
 import argparse, hashlib, json, os
 from pathlib import Path
-TABLES={'listens_raw.jsonl':'LISTENS_RAW','mb_artists_raw.jsonl':'MB_ARTISTS_RAW'}
+TABLES={'listens_raw.jsonl':'LISTENS_RAW','mb_artists_raw.jsonl':'MB_ARTISTS_RAW','wiki_pageviews_raw.jsonl':'WIKI_PAGEVIEWS_RAW'}
 def records(path):
  for n,line in enumerate(path.open(),1):
   r=json.loads(line)
@@ -14,10 +14,11 @@ def load_local(folder,database):
  con.execute('CREATE SCHEMA IF NOT EXISTS DEV_HUGO_BRONZE')
  con.execute("SET TimeZone='UTC'")
  for name,table in TABLES.items():
-  rows=list(records(folder/name))
+  rows=list(records(folder/name)) if (folder/name).exists() else []
+  if not rows and table != 'WIKI_PAGEVIEWS_RAW':raise ValueError(f'Missing or empty fixture: {name}')
   con.execute(f'CREATE TABLE IF NOT EXISTS DEV_HUGO_BRONZE.{table} (RAW JSON, _SOURCE_FILE VARCHAR, _BATCH_ID VARCHAR, _LOADED_AT TIMESTAMPTZ, _ROW_HASH VARCHAR PRIMARY KEY)')
   values=[(json.dumps(r['RAW'],sort_keys=True),r['_SOURCE_FILE'],r['_BATCH_ID'],r['_LOADED_AT'],hashlib.sha256(json.dumps(r,sort_keys=True).encode()).hexdigest()) for r in rows]
-  con.executemany(f'INSERT INTO DEV_HUGO_BRONZE.{table} VALUES (?,?,?,?,?) ON CONFLICT DO NOTHING',values)
+  if values:con.executemany(f'INSERT INTO DEV_HUGO_BRONZE.{table} VALUES (?,?,?,?,?) ON CONFLICT DO NOTHING',values)
   print(table,con.execute(f'SELECT COUNT(*) FROM DEV_HUGO_BRONZE.{table}').fetchone()[0])
  con.close()
 
@@ -29,12 +30,13 @@ def load_snowflake(folder):
  with snowflake.connector.connect(**args) as con:
   cur=con.cursor();cur.execute('CREATE SCHEMA IF NOT EXISTS VAYBA.DEV_HUGO_BRONZE');cur.execute('USE SCHEMA VAYBA.DEV_HUGO_BRONZE')
   for name,table in TABLES.items():
+   cur.execute(f'CREATE TABLE IF NOT EXISTS {table} (RAW VARIANT,_SOURCE_FILE VARCHAR,_BATCH_ID VARCHAR,_LOADED_AT TIMESTAMP_TZ)')
+   if table == 'WIKI_PAGEVIEWS_RAW' and not (folder/name).exists():continue
    path=(folder/name).resolve();list(records(path))
    if "'" in str(path):raise ValueError('Paths containing quotes are unsupported')
    cur.execute('CREATE OR REPLACE TEMPORARY TABLE VAYBA_FIXTURE_INPUT (ENVELOPE VARIANT)')
    cur.execute(f"PUT 'file://{path}' @%VAYBA_FIXTURE_INPUT AUTO_COMPRESS=TRUE OVERWRITE=TRUE")
    cur.execute('COPY INTO VAYBA_FIXTURE_INPUT FILE_FORMAT=(TYPE=JSON) ON_ERROR=ABORT_STATEMENT')
-   cur.execute(f'CREATE TABLE IF NOT EXISTS {table} (RAW VARIANT,_SOURCE_FILE VARCHAR,_BATCH_ID VARCHAR,_LOADED_AT TIMESTAMP_TZ)')
    cur.execute(f'''MERGE INTO {table} t USING (
     SELECT ENVELOPE:RAW AS RAW,ENVELOPE:_SOURCE_FILE::VARCHAR AS _SOURCE_FILE,
     ENVELOPE:_BATCH_ID::VARCHAR AS _BATCH_ID,ENVELOPE:_LOADED_AT::TIMESTAMP_TZ AS _LOADED_AT,

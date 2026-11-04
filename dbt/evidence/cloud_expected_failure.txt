@@ -1,0 +1,6 @@
+[0m21:15:49  1 of 1 START test no_unknown_artists ........................................... [RUN]
+[0m21:15:51  1 of 1 FAIL 1 no_unknown_artists ............................................... [[31mFAIL 1[0m in 1.50s]
+[0m21:15:55  [31mFailure in test no_unknown_artists (tests/no_unknown_artists.sql)[0m
+[0m21:15:55    Got 1 result, configured to fail if != 0
+[0m21:15:55    compiled code at /Users/Hugo/.codex/.chatgpt-projects/g-p-6ac35c673c74819192f00c104258c428/outputs/vayba-final-checks/incident-target/compiled/vayba_dbt/tests/no_unknown_artists.sql
+[0m21:15:55  Done. PASS=1 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=2

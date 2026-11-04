@@ -1,0 +1,11 @@
+{
+  "target": "Snowflake DEV_HUGO_INCIDENT_*",
+  "artist_mbid": "00034ede-a1f1-4219-be39-02f36853373e",
+  "removed_dimension_rows": 1,
+  "delete_query_id": "01c82bfb-040c-cb04-0034-1e6b001a504a",
+  "restore_query_id": "01c82bfb-040c-c644-0034-1e6b001a9042",
+  "before": "PASS",
+  "injected": "FAIL expected",
+  "restored": "PASS",
+  "production_modified": false
+}

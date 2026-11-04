@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "actual_model": "neighbors.sql",
+  "rule": "target listener plays DESC, neighbor plays DESC, artist MBID ASC",
+  "most_listened_shared_artist": "z_high",
+  "reciprocal_reason": "a_low",
+  "lexical_tie_break": "m_tied",
+  "common_artists": 3,
+  "similarity": 1.0,
+  "insertion_order_independent": true
+}

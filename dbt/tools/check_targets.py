@@ -35,7 +35,7 @@ def main():
             assert result.returncode == 0, result.stdout[-3000:] + result.stderr[-1000:]
             manifest = json.loads((output / 'manifest.json').read_text())
             models = [node for node in manifest['nodes'].values() if node['resource_type'] == 'model']
-            assert len(models) == 12
+            assert len(models) == 13
             prefix = '' if target == 'prod' else 'DEV_HUGO_' if target == 'local' else 'DEV_ROUTING_CHECK_'
             for node in models:
                 layer = 'GOLD' if '/gold/' in node['original_file_path'] else 'SILVER'

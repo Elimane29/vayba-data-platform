@@ -12,8 +12,8 @@
   "hit_caption": "Part des utilisateurs ayant écouté au moins un artiste de leur sélection.",
   "baseline": "Référence de popularité",
   "baseline_caption": "Même mesure avec une sélection basée sur la popularité.",
-  "discovery": "Nouveauté de la sélection",
-  "discovery_caption": "Artistes recommandés absents de l’historique utilisé.",
+  "discovery": "Découvertes dans les écoutes",
+  "discovery_caption": "Part des écoutes mappées de la semaine où tous les artistes sont absents de l’historique considéré. Chaque écoute compte une fois.",
   "comparison": "Co-écoute et popularité",
   "colistening": "Co-écoute",
   "popularity": "Popularité",
@@ -28,7 +28,11 @@
   "ready": "Données chargées",
   "playlist_tab": "Ma playlist",
   "metrics_tab": "Les résultats",
-  "footer": "Vayba · Prototype pédagogique · Écoutes ListenBrainz et artistes MusicBrainz",
+  "footer": "Vayba · Prototype pédagogique · ListenBrainz, MusicBrainz et pages vues Wikipédia",
   "refreshed": "Données mises à jour",
-  "refresh_error": "Actualisation indisponible. Réessaie dans quelques instants."
+  "refresh_error": "Actualisation indisponible. Réessaie dans quelques instants.",
+  "lesser_known": "Artistes moins connus",
+  "lesser_known_caption": "Artistes recommandés distincts sous le seuil de {threshold} vues sur Wikipédia en anglais cette semaine. Seuil exploratoire ; seules les semaines de sept jours sont mesurées.",
+  "wiki_coverage": "Couverture Wikipédia",
+  "wiki_coverage_caption": "Part des artistes recommandés distincts ayant sept jours de pages vues. Une absence de données ne signifie pas zéro vue."
 }

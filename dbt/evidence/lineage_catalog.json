@@ -1,0 +1,28 @@
+{
+  "adapter": "snowflake",
+  "generated_at": "2026-11-04T15:32:09.880190Z",
+  "catalog_models": 13,
+  "catalog_sources": 3,
+  "model_schemas": [
+    "DEV_HUGO_REASONS_GOLD",
+    "DEV_HUGO_REASONS_SILVER"
+  ],
+  "sources": [
+    {
+      "name": "LISTENS_RAW",
+      "database": "VAYBA",
+      "schema": "BRONZE"
+    },
+    {
+      "name": "MB_ARTISTS_RAW",
+      "database": "VAYBA",
+      "schema": "BRONZE"
+    },
+    {
+      "name": "WIKI_PAGEVIEWS_RAW",
+      "database": "VAYBA",
+      "schema": "BRONZE"
+    }
+  ],
+  "provenance": "dbt docs generate --target dev --static using actual Snowflake catalog; not Snowsight native UI"
+}

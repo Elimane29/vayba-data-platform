@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-04",
+  "file": "Vayba_Yanis_demo_pipeline_muette_2026-11-04.mp4",
+  "seconds": 38.488,
+  "bytes": 624112,
+  "sha256": "d3d30481294f9b48e4960f255007c8fb265fcb6507e02f85e62af28eefcd7220",
+  "audio_tracks": 0,
+  "source": "Actual CUA browser captures during GCS and Snowflake navigation; original timing retained",
+  "captured_frames": 47,
+  "navigation": [
+    {
+      "label": "GCS — trois sources",
+      "ms": 0
+    },
+    {
+      "label": "GCS — deux semaines",
+      "ms": 5002
+    },
+    {
+      "label": "GCS — fichiers NDJSON",
+      "ms": 11420
+    },
+    {
+      "label": "Snowflake — lecture du stage GCS",
+      "ms": 19193
+    },
+    {
+      "label": "Snowflake — volumes et doublons",
+      "ms": 25367
+    }
+  ],
+  "cloud_queries": "Read-only LIST and SELECT; no pipeline rerun or data modifications",
+  "observed_bronze_counts": {
+    "listens": 16447,
+    "artists": 2478,
+    "wikipedia": 1234
+  },
+  "observed_duplicates": 0,
+  "decode_check": "PASS",
+  "scope": "Yanis ingestion walkthrough; no Airflow or Dash UI included because no accessible links found"
+}

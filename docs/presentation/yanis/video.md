@@ -1,6 +1,6 @@
 # Démo courte et muette — Yanis
 
-Fichier : `Vayba_Yanis_demo_pipeline_muette_2026-11-04.mp4`.
+Fichier distribué séparément, hors Git : `Vayba_Yanis_demo_pipeline_muette_2026-11-04.mp4`.
 Durée : environ 38,5 secondes. Aucune piste audio. Aucune slide.
 
 La vidéo est constituée de captures successives des interfaces réelles pendant la navigation du 4 novembre,

@@ -5,9 +5,8 @@ Ce dossier contient la partie business et ingestion prête à intégrer au suppo
 - `Vayba_Yanis_partie1_final_2026-11-04.pptx` : cinq slides éditables, notes orales et références incluses.
 - `Vayba_Yanis_partie1_final_2026-11-04.pdf` : copie de consultation des cinq slides, exportée depuis les rendus.
 - `oral.md` : texte de répétition, cible d'environ 4 min 30, et réponses aux questions.
-- `Vayba_Yanis_demo_pipeline_muette_2026-11-04.mp4` : parcours réel de 38,5 secondes, sans piste audio ni slides.
 - `video.md` : périmètre et déroulé de la démonstration.
-- `demo_pipeline_validation.json` : durée, absence d'audio et contrôles de la nouvelle vidéo.
+- `demo_pipeline_validation.json` : durée, absence d'audio et contrôles de la vidéo distribuée séparément.
 - `profil_validation.json` : vérification du format et des comptes du CSV musical déjà fourni.
 
 Dans le deck commun, utiliser les slides 2 à 5 si une couverture de groupe existe déjà. La durée indiquée
@@ -36,7 +35,8 @@ personnalisée. Les 25 profils et les métriques S+1 existants ne sont pas modif
 
 ## Vidéo
 
-La vidéo actuelle remplace l'ancien support avec voix de synthèse. Elle parcourt les vrais écrans GCS et
+Les fichiers vidéo sont distribués hors du dépôt ; seules leur description et leurs preuves de validation
+sont conservées ici. La vidéo courte remplace l'ancien support avec voix de synthèse. Elle parcourt les vrais écrans GCS et
 Snowflake connectés le 4 novembre : dossiers sources, semaines, fichiers, stage et contrôle en lecture seule.
 Elle montre 16 447 écoutes, 2 478 artistes, 1 234 documents Wikipédia et zéro doublon.
 Airflow et Dash ne sont pas filmés dans cette séquence ; leurs démonstrations sont celles des autres membres.

@@ -9,23 +9,23 @@
   "captured_frames": 47,
   "navigation": [
     {
-      "label": "GCS — trois sources",
+      "label": "GCS â€” trois sources",
       "ms": 0
     },
     {
-      "label": "GCS — deux semaines",
+      "label": "GCS â€” deux semaines",
       "ms": 5002
     },
     {
-      "label": "GCS — fichiers NDJSON",
+      "label": "GCS â€” fichiers NDJSON",
       "ms": 11420
     },
     {
-      "label": "Snowflake — lecture du stage GCS",
+      "label": "Snowflake â€” lecture du stage GCS",
       "ms": 19193
     },
     {
-      "label": "Snowflake — volumes et doublons",
+      "label": "Snowflake â€” volumes et doublons",
       "ms": 25367
     }
   ],
@@ -37,5 +37,6 @@
   },
   "observed_duplicates": 0,
   "decode_check": "PASS",
-  "scope": "Yanis ingestion walkthrough; no Airflow or Dash UI included because no accessible links found"
+  "scope": "Yanis ingestion walkthrough; no Airflow or Dash UI included because no accessible links found",
+  "distribution": "External video file; not tracked in the current repository version"
 }

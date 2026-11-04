@@ -1,0 +1,11 @@
+{
+  "file": "docs/team_profile_yanis.csv",
+  "artists": 23,
+  "total_declared_plays": 83,
+  "uuid_format": "PASS",
+  "unique_artists": "PASS",
+  "positive_counts": "PASS",
+  "artists_present_in_local_2478_artist_snapshot": 14,
+  "integration_status": "CSV validated only; no manual listening events created or Gold publication executed",
+  "evaluated_users_unchanged": 25
+}

@@ -43,8 +43,16 @@ Users to ingest: `ingestion/listenbrainz_users.txt`. Offline checks: `python ing
 SELECT _SOURCE_FILE, COUNT(*) FROM VAYBA.BRONZE.LISTENS_RAW
 WHERE _SOURCE_FILE LIKE 'listenbrainz/week=2026-10-26/%' GROUP BY 1 ORDER BY 1;
 
--- no duplicate listen: must return 0
-SELECT COUNT(*) - COUNT(DISTINCT RAW:user_name, RAW:listened_at, RAW:recording_msid) FROM VAYBA.BRONZE.LISTENS_RAW;
+-- Duplicate listens, including API files whose user is only in the filename: must return 0.
+WITH identities AS (
+  SELECT COALESCE(NULLIF(RAW:user_name::VARCHAR, ''),
+         REGEXP_SUBSTR(_SOURCE_FILE, 'user=([^/]+)[.]json$', 1, 1, 'e', 1)) AS user_name,
+         RAW:listened_at AS listened_at, RAW:recording_msid AS recording_msid
+  FROM VAYBA.BRONZE.LISTENS_RAW
+)
+SELECT COALESCE(SUM(n - 1), 0) AS duplicates
+FROM (SELECT COUNT(*) AS n FROM identities
+      GROUP BY user_name, listened_at, recording_msid HAVING COUNT(*) > 1);
 ```
 
 Reference runs, `--no-load`, 2026-11-02, week 2026-10-26:
@@ -85,6 +93,12 @@ Final two-week extension, 2026-11-03:
   `history_start: 2026-10-19`, `week_start: 2026-10-26`, `test_end: 2026-11-02`.
 - Local S+1 results: 25 users, hit rate 0.48 versus popularity 0.56; no uplift demonstrated.
   See `docs/evidence/2026-11-03_real_data_dbt_local.json` and the handoff for remaining decisions.
+
+Team production evidence is now available: `docs/evidence/2026-11-03_airflow_run.md` and the replay table
+in `docs/runbook.md`. Both preserve 16,447 bronze listens, zero duplicates and 250 playlist rows.
+The original Airflow run passed 26 results. The newer Wikipedia metric is documented separately in
+`dbt/evidence/final_cloud_checks.json`; its listening-based discovery rate is 0.381643, replacing the
+historical recommendation-based 1.00. These are distinct executions, not a claim that all versions ran together.
 
 | Symptom | Cause | What happens |
 |---|---|---|

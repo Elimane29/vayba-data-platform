@@ -59,9 +59,8 @@ the development of the business. It is not an operating plan, a promised transac
 ### Metrics (`GOLD.METRICS_HEBDO`, grain: one row per `WEEK_START`)
 
 The playlist of week W is built only from listens **before** W, and judged on listens **during** W (the "S+1" week
-relative to the data used). The following definitions align with Hugo's `part2/wiki-discovery` revision
-`c002a7e`; that branch must be integrated for the new Wikipedia metrics and discovery calculation to be
-reproducible from main. These are agreed conventions, rather than claims of causality.
+relative to the data used). The following definitions align with Hugo's Wikipedia and discovery work,
+integrated in main through PR11 (`f80d0f6`). These are agreed conventions, rather than claims of causality.
 
 | Column | Formula | Exclusions |
 |---|---|---|
@@ -126,7 +125,8 @@ has never heard in their lifetime.
 
 A2-A4 were not established by this first single-week ingestion proof. A valid S+1 evaluation needs training
 data before the target week and a complete evaluation week; the later measurements are described below.
-The commercial model is now B2C; the team still needs to confirm the API-versus-dump decision. Hashing user names from silver
+The commercial model is B2C. The implemented prototype uses the three public APIs, as described below.
+Hashing user names from silver
 pseudonymizes identifiers; it does not by itself guarantee anonymity.
 
 ### Two-week extension and measured local S+1 result
@@ -159,12 +159,32 @@ Sources on that revision:
 and [final cloud checks](https://github.com/Elimane29/vayba-data-platform/blob/c002a7e/dbt/evidence/final_cloud_checks.json).
 The latter distinguishes a successful development dbt build from publication of two compiled models in
 shared GOLD; that publication is not a new complete production dbt/Airflow run. Its incident proof concerns
-isolated `DEV_HUGO_INCIDENT_*` schemas. The complete Airflow replay still requires operations validation.
+isolated `DEV_HUGO_INCIDENT_*` schemas. The separate full Airflow run and replay are documented below.
 These are Hugo's recorded executions, reviewed for this document; they were not rerun by Yanis.
 
-### Team status reported on November 4
+### Production run and replay evidence reviewed on November 4
 
-Elimane reports a successful production run and replay: 16,447 listens, zero duplicates, `PASS=26`,
-with denied-access checks demonstrated. This updates the earlier pending-operations status above.
-The earlier dated measurements remain records of their respective runs and model versions; this team
-update does not establish that every later Wikipedia model was included in that full production run.
+Elimane's `docs/evidence/2026-11-03_airflow_run.md` and `docs/runbook.md` now document a successful production
+run and replay: 16,447 listens, zero duplicates, `PASS=26`, 14,472 silver listens and 250 playlist rows.
+The run is `scheduled__2026-11-02T05:00:00+00:00`; its replay is
+`manual__2026-11-03T19:57:29.316849+00:00`. The three ingestion tasks and dbt completed successfully.
+Denied-access checks are separately recorded in `dbt/evidence/final_cloud_checks.json` and
+`dashboard/evidence/checks.json`.
+
+These records certify their dated runs and model versions. The newer Wikipedia metrics and explanation
+changes have their own development/publication evidence; `PASS=26` must not be relabelled as a full Airflow
+run of the newer 28-result development version. The earlier 100% discovery value in the original run is
+historical, and is superseded by the listening-based 38.1643% definition above.
+
+### Source choice for the implemented prototype
+
+The prototype uses ListenBrainz's API for a fixed sample of 25 public profiles and two completed UTC weeks,
+MusicBrainz's API for artist metadata, and the Wikimedia APIs for article resolution and daily pageviews.
+API responses are preserved as NDJSON in GCS for loading and replay. This supports a small, inspectable
+weekly prototype without downloading a complete listening corpus.
+
+Incremental dumps remain an alternative for larger historical backfills. No dump ingestion benchmark was
+executed in this prototype, and API data should not be presented as a dump extract. The sample is small and
+not representative; API rate limits, transient failures, late listens, missing artist mappings and incomplete
+Wikipedia coverage constrain the results. Subscription price and conversion are assumptions, since these
+sources contain no premium-conversion data.

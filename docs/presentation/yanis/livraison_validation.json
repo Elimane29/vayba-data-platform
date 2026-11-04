@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-04",
+  "base_main": "295cb3f",
+  "slides": 5,
+  "visual_review": "All five rendered slides inspected individually; no clipping or unintended overlap observed",
+  "pptx_validation": "Package, layout, Arial reference font, native tables and import PASS",
+  "pdf_pages": 5,
+  "pdf_type": "Raster consultation copy; PPTX remains editable",
+  "narration_check": "7 non-silent WAV segments",
+  "video": {
+    "file": "Vayba_Yanis_support_video_2026-11-04.mp4",
+    "seconds": 178.6,
+    "bytes": 2112040,
+    "narration": "Microsoft Hortense Desktop; synthetic French voice",
+    "type": "Commented slide presentation and dated real screenshots; not a live pipeline recording",
+    "segments": [
+      {
+        "segment": 1,
+        "image": "slide-1.png",
+        "seconds": 22.271
+      },
+      {
+        "segment": 2,
+        "image": "slide-2.png",
+        "seconds": 27.885
+      },
+      {
+        "segment": 3,
+        "image": "slide-3.png",
+        "seconds": 28.895
+      },
+      {
+        "segment": 4,
+        "image": "slide-4.png",
+        "seconds": 32.739
+      },
+      {
+        "segment": 5,
+        "image": "before.jpg",
+        "seconds": 17.632
+      },
+      {
+        "segment": 6,
+        "image": "after.jpg",
+        "seconds": 20.106
+      },
+      {
+        "segment": 7,
+        "image": "slide-5.png",
+        "seconds": 29.07
+      }
+    ],
+    "decode_check": "PASS"
+  },
+  "files": {
+    "narration_video.json": {
+      "bytes": 2974,
+      "sha256": "bb0fd1170b441beb1cb8fe394ec15a973b396bc360c909738c0870451520d306"
+    },
+    "oral.md": {
+      "bytes": 5523,
+      "sha256": "56e5417c9385aedbebe4acb60bc21c8d30a8e73fb39b2f70e187266bb651bd6f"
+    },
+    "profil_validation.json": {
+      "bytes": 385,
+      "sha256": "65b814244203255b510834f821855b4930b90be0bb06bff31b1be9467afc5e28"
+    },
+    "README.md": {
+      "bytes": 2925,
+      "sha256": "2a93dc1643586f1d2aa6d8902d43a473d2ecb4071bf9e68da0d9e81f9950be82"
+    },
+    "Vayba_Yanis_partie1_final_2026-11-04.pdf": {
+      "bytes": 308100,
+      "sha256": "b0a5de8923b4cffac4b3b42728b7ceee5ccd2dcaa70874dead0294bb4ff48f79"
+    },
+    "Vayba_Yanis_partie1_final_2026-11-04.pptx": {
+      "bytes": 36231,
+      "sha256": "2b036313affbedd162f9086b2f0bcaf99a0519aa197ba1abdaceee28c9c6c42d"
+    },
+    "Vayba_Yanis_support_video_2026-11-04.mp4": {
+      "bytes": 2112040,
+      "sha256": "4fbe3cd4a12b22dbdf39c0e23cc16ecd2b695a6e3186ae6c50e72ae6a7898035"
+    },
+    "video.md": {
+      "bytes": 1317,
+      "sha256": "45fd3a497d70760e1d98ef2e252c3b80d71e2f28cf6c22f3245547ff517ab2a5"
+    }
+  }
+}

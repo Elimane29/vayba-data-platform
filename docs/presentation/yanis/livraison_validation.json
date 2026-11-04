@@ -17,23 +17,23 @@
     "captured_frames": 47,
     "navigation": [
       {
-        "label": "GCS â€” trois sources",
+        "label": "GCS — trois sources",
         "ms": 0
       },
       {
-        "label": "GCS â€” deux semaines",
+        "label": "GCS — deux semaines",
         "ms": 5002
       },
       {
-        "label": "GCS â€” fichiers NDJSON",
+        "label": "GCS — fichiers NDJSON",
         "ms": 11420
       },
       {
-        "label": "Snowflake â€” lecture du stage GCS",
+        "label": "Snowflake — lecture du stage GCS",
         "ms": 19193
       },
       {
-        "label": "Snowflake â€” volumes et doublons",
+        "label": "Snowflake — volumes et doublons",
         "ms": 25367
       }
     ],
@@ -45,12 +45,13 @@
     },
     "observed_duplicates": 0,
     "decode_check": "PASS",
-    "scope": "Yanis ingestion walkthrough; no Airflow or Dash UI included because no accessible links found"
+    "scope": "Yanis ingestion walkthrough; no Airflow or Dash UI included because no accessible links found",
+    "distribution": "External video file; not tracked in the current repository version"
   },
   "files": {
     "demo_pipeline_validation.json": {
-      "bytes": 1150,
-      "sha256": "970f00b339f819504dc64efde7c177522ffb260318a4607cf78a466a14fb71fa"
+      "bytes": 1239,
+      "sha256": "bd2f9b6de125ea5441d4dfae999dfa06c85afa229b3290a94eae33bf17e64f58"
     },
     "oral.md": {
       "bytes": 5523,
@@ -61,12 +62,8 @@
       "sha256": "65b814244203255b510834f821855b4930b90be0bb06bff31b1be9467afc5e28"
     },
     "README.md": {
-      "bytes": 3150,
-      "sha256": "1d9d8719b1e77abb4ba83072b1d1ed111564fca69ffcc429b217c3e9fb8b21c0"
-    },
-    "Vayba_Yanis_demo_pipeline_muette_2026-11-04.mp4": {
-      "bytes": 624112,
-      "sha256": "d3d30481294f9b48e4960f255007c8fb265fcb6507e02f85e62af28eefcd7220"
+      "bytes": 3181,
+      "sha256": "3da2448553040a90b341ccb829fe22c9975e055e88d9b23bea0d85cb3acba8e4"
     },
     "Vayba_Yanis_partie1_final_2026-11-04.pdf": {
       "bytes": 308100,
@@ -77,8 +74,8 @@
       "sha256": "2b036313affbedd162f9086b2f0bcaf99a0519aa197ba1abdaceee28c9c6c42d"
     },
     "video.md": {
-      "bytes": 1506,
-      "sha256": "b1ca207c2765900c4d3a5c976bc940c11361b8f25197dc55781cca74bb89de50"
+      "bytes": 1540,
+      "sha256": "15ffd67b5af46968df1ef98db790e4b518cbcef258b8070a41c44b8ce8e7a409"
     }
   }
 }

@@ -9,23 +9,23 @@
   "captured_frames": 47,
   "navigation": [
     {
-      "label": "GCS â€” trois sources",
+      "label": "GCS — trois sources",
       "ms": 0
     },
     {
-      "label": "GCS â€” deux semaines",
+      "label": "GCS — deux semaines",
       "ms": 5002
     },
     {
-      "label": "GCS â€” fichiers NDJSON",
+      "label": "GCS — fichiers NDJSON",
       "ms": 11420
     },
     {
-      "label": "Snowflake â€” lecture du stage GCS",
+      "label": "Snowflake — lecture du stage GCS",
       "ms": 19193
     },
     {
-      "label": "Snowflake â€” volumes et doublons",
+      "label": "Snowflake — volumes et doublons",
       "ms": 25367
     }
   ],

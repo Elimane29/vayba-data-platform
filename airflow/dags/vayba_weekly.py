@@ -15,7 +15,9 @@ from docker.types import Mount
 IMAGE = "vayba-pipeline:1.0.0"
 
 # The week to process: the Monday before the run, or the "week" parameter of a manual run.
-WEEK_EXPR = "params.week or data_interval_start.start_of('week').to_date_string()"
+# Airflow 3: data_interval_start is the run time itself, so step back one week to get the completed week.
+# Airflow 3: data_interval_start is the run time itself, so step back one week to get the completed week.
+WEEK_EXPR = "params.week or data_interval_start.subtract(weeks=1).start_of('week').to_date_string()"
 WEEK = "{{ " + WEEK_EXPR + " }}"
 
 # dbt dates (part 2): recommend from the previous week's history, evaluate on the processed week.

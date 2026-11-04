@@ -1,0 +1,82 @@
+{
+  "comparison": "validated PR11 snapshot DEV_HUGO_FINAL versus corrected DEV_HUGO_REASONS",
+  "playlist_rows": 250,
+  "reason_changes": 153,
+  "artists_positions_scores_unchanged": true,
+  "metrics_unchanged": true,
+  "first_profile_examples": [
+    {
+      "position": 1,
+      "artist": "ILLIT",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 2,
+      "artist": "ROSALÍA",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 3,
+      "artist": "Harry Styles",
+      "before": "Sabrina Carpenter",
+      "after": "Britney Spears"
+    },
+    {
+      "position": 4,
+      "artist": "aespa",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 5,
+      "artist": "NewJeans",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 6,
+      "artist": "LE SSERAFIM",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 7,
+      "artist": "Björk",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 8,
+      "artist": "Tinashe",
+      "before": "Massive Attack",
+      "after": "Charli xcx"
+    },
+    {
+      "position": 9,
+      "artist": "Carly Rae Jepsen",
+      "before": "Sabrina Carpenter",
+      "after": "Britney Spears"
+    },
+    {
+      "position": 10,
+      "artist": "Myke Towers",
+      "before": "Sabrina Carpenter",
+      "after": "Britney Spears"
+    }
+  ],
+  "journal": [
+    [
+      "67d1d89b-bd6c-4a22-aaa0-9a53bc6cdc42",
+      "success",
+      13
+    ],
+    [
+      "67d1d89b-bd6c-4a22-aaa0-9a53bc6cdc42",
+      "pass",
+      14
+    ]
+  ],
+  "production_modified": false
+}

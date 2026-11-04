@@ -1,16 +1,16 @@
-# Vayba · plateforme de données « Nouvelles vibes »
+# Vayba · "New vibes" data platform
 
-> *On t'aide à chercher de nouvelles vibes.*
+> *We help you find new vibes.*
 
-Projet du cours **Data Engineering & Infrastructure Cloud** (Albert School, M2, 2026), groupe 7 :
+Project for the **Data Engineering & Cloud Infrastructure** course (Albert School, M2, 2026), group 7:
 Yanis Rajhi, Elimane Diallo, Hugo van Zuylen van Nyevelt.
 
-Vayba est une entreprise **fictive** de streaming musical, en B2C, dont Spotify est le principal concurrent. Chaque lundi,
-elle propose à chaque auditeur une playlist « Nouvelles vibes » de **10 artistes absents de son historique**.
-Ces artistes sont choisis par **co-écoute** : ce qu'écoutent les auditeurs aux goûts proches.
+Vayba is a **fictional** B2C music-streaming company whose main competitor is Spotify. Every Monday it gives each
+listener a "New vibes" playlist of **10 artists missing from their listening history**, chosen by **co-listening**:
+what listeners with similar tastes play.
 
-L'entreprise est fictive, mais **les données sont réelles** : de vraies écoutes publiques remplacent les logs internes de Vayba.
-Le pipeline va de l'API jusqu'à l'application. Il tourne dans le cloud, se rejoue sans double comptage, et il est testé.
+The company is fictional, but **the data is real**: real public listens stand in for Vayba's internal logs.
+The pipeline runs from the API to the app. It runs in the cloud, can be replayed without double counting, and is tested.
 
 ---
 
@@ -18,65 +18,65 @@ Le pipeline va de l'API jusqu'à l'application. Il tourne dans le cloud, se rejo
 
 ```mermaid
 flowchart LR
-    A[API publiques<br/>ListenBrainz · MusicBrainz<br/>Wikidata · Wikipédia] --> B[Ingestion Python<br/>image Docker]
-    B --> C[(GCS<br/>bucket privé, us-west1)]
-    C -->|COPY INTO| D[(Snowflake BRONZE<br/>JSON brut)]
-    D --> E[dbt<br/>SILVER puis GOLD]
-    F[CSV profil de Yanis] -.->|seed dbt, à intégrer| E
-    E --> G[Dash<br/>playlist et métriques]
-    H[Airflow 3<br/>lundi 06:00 Paris] -. orchestre .-> B
-    H -. orchestre .-> E
-    T[Terraform<br/>state dans GCS] -. déclare .-> C
+    A[Public APIs<br/>ListenBrainz · MusicBrainz<br/>Wikidata · Wikipedia] --> B[Python ingestion<br/>Docker image]
+    B --> C[(GCS<br/>private bucket, us-west1)]
+    C -->|COPY INTO| D[(Snowflake BRONZE<br/>raw JSON)]
+    D --> E[dbt<br/>SILVER then GOLD]
+    F[Yanis's profile CSV] -.->|dbt seed, to integrate| E
+    E --> G[Dash<br/>playlist and metrics]
+    H[Airflow 3<br/>Monday 06:00 Paris] -. orchestrates .-> B
+    H -. orchestrates .-> E
+    T[Terraform<br/>state in GCS] -. declares .-> C
 ```
 
-| Étape | Outil | Pourquoi | Alternative écartée |
+| Step | Tool | Why | Alternative not chosen |
 |---|---|---|---|
-| Ingestion | Scripts Python dans un conteneur | API publiques simples, filtrage sur mesure | Airbyte ou Fivetran : surdimensionnés ici |
-| Atterrissage | Bucket GCS privé | Fichiers bruts conservés et rejouables, lus nativement par Snowflake | — |
-| Entrepôt | Snowflake, warehouse XS | Calcul séparé du stockage, arrêt automatique après 60 s | BigQuery : plus simple sur GCP, mais un outil de plus à apprendre |
-| Transformation | dbt | SQL versionné, tests, lignage | — |
-| Orchestration | Airflow 3 et DockerOperator | L'ingestion tourne hors de Snowflake | Tâches Snowflake : ne couvrent pas l'ingestion |
-| Infrastructure | Terraform | Bucket, droits et rôle de lecture en code, state verrouillé | Console : rien n'est reproductible |
-| Restitution | Dash | Une app Python légère, en lecture seule | Streamlit |
+| Ingestion | Python scripts in a container | Simple public APIs, custom filtering | Airbyte or Fivetran: oversized here |
+| Landing | Private GCS bucket | Raw files kept and replayable, read natively by Snowflake | — |
+| Warehouse | Snowflake, XS warehouse | Compute separate from storage, auto-suspends after 60 s | BigQuery: simpler on GCP, but one more tool to learn |
+| Transformation | dbt | Versioned SQL, tests, lineage | — |
+| Orchestration | Airflow 3 with DockerOperator | Ingestion runs outside Snowflake | Snowflake tasks: they do not cover ingestion |
+| Infrastructure | Terraform | Bucket, access and read role as code, locked state | Console: nothing is reproducible |
+| Delivery | Dash | Lightweight, read-only Python app | Streamlit |
 
-**Région :** le compte Snowflake est en AWS `us-west-2` (Oregon), donc le bucket est en GCP `us-west1`, juste à côté.
-En production, une entreprise française choisirait une région européenne pour les deux, à cause du RGPD.
+**Region:** the Snowflake account is on AWS `us-west-2` (Oregon), so the bucket is on GCP `us-west1`, right next to it.
+In production, a French company would choose a European region for both, because of GDPR.
 
 ## Sources
 
-| Source | Apport | Méthode d'ingestion | Volume chargé |
+| Source | Provides | Ingestion method | Volume loaded |
 |---|---|---|---|
-| ListenBrainz | Écoutes par auditeur | API, la semaine est remplacée à chaque run | 16 447 écoutes, 25 auditeurs, 2 semaines |
-| MusicBrainz | Identité des artistes | API incrémentale : seuls les nouveaux artistes sont demandés | 2 478 artistes |
-| Wikidata | Lien de l'artiste vers Wikipédia | API, appelée pendant l'étape Wikipédia | 1 278 liens |
-| Pages vues Wikipédia | Popularité externe | API, la semaine est remplacée à chaque run | 1 234 documents |
-| Profil de Yanis | Goûts déclarés, pour un contrôle subjectif | Fichier CSV ([docs/team_profile_yanis.csv](docs/team_profile_yanis.csv)) | 23 artistes, dont 14 présents dans les écoutes |
+| ListenBrainz | Listens per user | API, the week is replaced on every run | 16,447 listens, 25 users, 2 weeks |
+| MusicBrainz | Artist identity | Incremental API: only new artists are requested | 2,478 artists |
+| Wikidata | Link from an artist to Wikipedia | API, called during the Wikipedia step | 1,278 links |
+| Wikipedia pageviews | External popularity | API, the week is replaced on every run | 1,234 documents |
+| Yanis's profile | Declared tastes, for a subjective check | CSV file ([docs/team_profile_yanis.csv](docs/team_profile_yanis.csv)) | 23 artists, 14 of them present in the listens |
 
-Les données Spotify ne sont pas utilisées : ses conditions interdisent l'analyse et l'entraînement sur ses contenus.
+Spotify data is not used: its terms forbid analysing its content or training on it.
 
-## Organisation du dépôt
+## Repository layout
 
-| Dossier | Contenu | Responsable |
+| Folder | Contents | Owner |
 |---|---|---|
-| [`ingestion/`](ingestion/README.md) | `run.py` (une commande par source et par semaine), SQL de bronze, tests hors ligne | Yanis |
-| [`dbt/`](dbt/README.md) | Modèles silver et gold, tests, macros, preuves | Hugo |
-| [`dashboard/`](dashboard/README.md) | Application Dash en lecture seule sur GOLD | Hugo |
-| [`airflow/`](airflow/) | DAG `vayba_weekly`, image Airflow, `docker-compose.yml` | Elimane |
-| [`docker/pipeline/`](docker/pipeline/Dockerfile) | Image `vayba-pipeline:1.0.0` (ingestion et dbt) | Elimane |
-| [`terraform/`](terraform/main.tf) | Bucket, droits d'accès, rôle de lecture sur mesure pour Snowflake | Elimane |
-| [`docs/`](docs/) | [Dossier métier](docs/business.md), [runbook](docs/runbook.md), [preuves datées](docs/evidence/), [transcript de l'oral](docs/transcript_oral.md) | Tous |
+| [`ingestion/`](ingestion/README.md) | `run.py` (one command per source and week), bronze SQL, offline tests | Yanis |
+| [`dbt/`](dbt/README.md) | Silver and gold models, tests, macros, evidence | Hugo |
+| [`dashboard/`](dashboard/README.md) | Read-only Dash app on GOLD | Hugo |
+| [`airflow/`](airflow/) | `vayba_weekly` DAG, Airflow image, `docker-compose.yml` | Elimane |
+| [`docker/pipeline/`](docker/pipeline/Dockerfile) | `vayba-pipeline:1.0.0` image (ingestion and dbt) | Elimane |
+| [`terraform/`](terraform/main.tf) | Bucket, access rights, custom read role for Snowflake | Elimane |
+| [`docs/`](docs/) | [Business case](docs/business.md), [runbook](docs/runbook.md), [dated evidence](docs/evidence/) | Everyone |
 
-## Lancer le pipeline
+## Running the pipeline
 
-Le détail, avec les prérequis et leurs responsables, est dans le [runbook](docs/runbook.md).
+Full details, with each prerequisite and its owner, are in the [runbook](docs/runbook.md).
 
-**Prérequis**, à faire une seule fois :
-1. Un projet GCP, un bucket de state Terraform, puis `terraform apply` dans `terraform/`.
-2. Côté Snowflake : la storage integration, le stage et les tables bronze ([`ingestion/sql/setup_bronze.sql`](ingestion/sql/setup_bronze.sql)), puis un utilisateur et un rôle par membre, avec authentification par clé RSA.
-3. Copier `.env.example` vers `.env`, et `airflow/.env.example` vers `airflow/.env`. Ces fichiers ne sont jamais commités.
-4. Se connecter à GCP : `gcloud auth application-default login`.
+**Prerequisites**, done once:
+1. A GCP project, a Terraform state bucket, then `terraform apply` in `terraform/`.
+2. On Snowflake: the storage integration, the stage and the bronze tables ([`ingestion/sql/setup_bronze.sql`](ingestion/sql/setup_bronze.sql)), then one user and role per member, with RSA key authentication.
+3. Copy `.env.example` to `.env`, and `airflow/.env.example` to `airflow/.env`. These files are never committed.
+4. Sign in to GCP: `gcloud auth application-default login`.
 
-**Lancement**, depuis la racine du dépôt :
+**Launch**, from the repository root:
 
 ```bash
 docker build -f docker/pipeline/Dockerfile -t vayba-pipeline:1.0.0 .
@@ -86,69 +86,70 @@ docker build -f docker/pipeline/Dockerfile -t vayba-pipeline:1.0.0 .
 cd airflow && docker compose up --build
 ```
 
-Ouvrir http://localhost:8080, activer `vayba_weekly`, puis le déclencher avec le paramètre `week` (un lundi, par exemple `2026-10-26`).
-Si `week` est vide, le DAG traite la semaine précédente. Il tourne aussi seul, chaque lundi à 06:00, heure de Paris.
+Open http://localhost:8080, unpause `vayba_weekly`, then trigger it with the `week` parameter (a Monday, e.g. `2026-10-26`).
+If `week` is empty, the DAG processes the previous week. It also runs on its own every Monday at 06:00, Paris time.
 
 ```
 ingest_listenbrainz → ingest_musicbrainz → ingest_wikipedia → dbt_build
 ```
 
-**Sans cloud**, pour tester dbt en local sur DuckDB avec des fixtures, voir [dbt/README.md](dbt/README.md).
+**Without the cloud**, to test dbt locally on DuckDB with fixtures, see [dbt/README.md](dbt/README.md).
 
-## Résultats (semaine du 26 octobre 2026)
+## Results (week of October 26, 2026)
 
-| Métrique | Valeur | Lecture |
+| Metric | Value | Meaning |
 |---|---|---|
-| `HIT_RATE_S1` co-écoute | **0,48** (12/25) | Auditeurs ayant écouté un artiste recommandé la semaine suivante |
-| `HIT_RATE_BASELINE_S1` popularité | **0,56** (14/25) | Même mesure, avec les artistes les plus populaires |
-| `DISCOVERY_RATE` | 0,38 | Écoutes de la semaine dont tous les artistes sont nouveaux pour l'auditeur |
-| `LESSER_KNOWN_RATE` | 0,011 (1/88) | Artistes recommandés sous 1 000 vues Wikipédia en 7 jours |
-| `WIKI_COVERAGE_RATE` | 1,00 | Part des artistes recommandés dont on connaît les pages vues |
+| `HIT_RATE_S1` co-listening | **0.48** (12/25) | Users who played a recommended artist the following week |
+| `HIT_RATE_BASELINE_S1` popularity | **0.56** (14/25) | Same measure, with the most popular artists |
+| `DISCOVERY_RATE` | 0.38 | Listens of the week where every artist is new to the user |
+| `LESSER_KNOWN_RATE` | 0.011 (1/88) | Recommended artists under 1,000 Wikipedia views over 7 days |
+| `WIKI_COVERAGE_RATE` | 1.00 | Share of recommended artists with known pageviews |
 
-**Pour l'instant, la popularité gagne,** de deux auditeurs sur 25. Le pipeline le mesure lui-même. La cause principale :
-25 auditeurs et deux semaines, c'est trop peu. Le basculement automatique vers la popularité n'est pas implémenté.
+**For now, popularity wins,** by two users out of 25. The pipeline measures this itself. The main cause: 25 users
+and two weeks are too few. The automatic switch to popularity is not implemented.
 
-## Fiabilité
+## Reliability
 
-- **Rejeu sans double comptage :** chaque run remplace sa semaine en une seule transaction, et silver dédoublonne les écoutes. Relancer la semaine du 26 octobre redonne **16 447 écoutes, 0 doublon et 250 lignes de playlist**.
-- **Tests dbt :** 13 tests, dont une clé unique, deux règles métier (aucun artiste déjà écouté n'est recommandé ; tout artiste existe dans MusicBrainz), un test de complétude de la semaine et des tests de forme. Un échec a été démontré sur Snowflake : le test passe à « fail », puis repasse après restauration.
-- **Données tardives :** la même semaine a donné 8 001, puis 8 003 écoutes à quelques heures d'écart. C'est pour ça qu'on remplace la semaine au lieu de la figer.
-- **Incidents réels :**
-  - **Clé Snowflake refusée** (`JWT token is invalid`), testé : Airflow passe en retry, le bronze reste intact, puis le retry réussit après correction de la clé.
-  - **Erreur 412** de l'organisation Google de l'école, qui refusait le compte de service Snowflake : corrigée avec un projet hors organisation, et le même code Terraform.
-  - **Semaine incomplète évitée sous Airflow 3 :** repérée dans les logs avant l'activation du DAG.
-- **Exploitation :** 2 retries Airflow espacés de 5 minutes, une alerte en cas d'échec, une exécution à la fois.
+- **Replay without double counting:** each run replaces its week in a single transaction, and silver deduplicates listens. Replaying the week of October 26 gives the same **16,447 listens, 0 duplicates and 250 playlist rows**.
+- **dbt tests:** 13 tests, including a unique key, two business rules (no already-played artist is recommended; every artist exists in MusicBrainz), a completeness test on the week, and shape tests. A failure was demonstrated on Snowflake: the test turns to "fail", then passes again after the data is restored.
+- **Late data:** the same week gave 8,001, then 8,003 listens a few hours apart. This is why each run replaces the week instead of freezing it.
+- **Real incidents:**
+  - **Snowflake key rejected** (`JWT token is invalid`), tested: Airflow retries the task, bronze stays intact, and the retry succeeds once the key is fixed.
+  - **Error 412** from the school's Google organization, which rejected Snowflake's service account: fixed with a project outside the organization, using the same Terraform code.
+  - **Incomplete week avoided under Airflow 3:** caught in the logs before the DAG was activated.
+- **Operations:** 2 Airflow retries 5 minutes apart, an alert on failure, one run at a time.
 
-## Sécurité et coûts
+## Security and costs
 
-- **Moindre privilège, vérifié :** l'accès autorisé ou refusé a été testé pour chaque cas. Un lecteur ne peut pas déposer dans le bucket. Le rôle de Dash ne lit que GOLD : la lecture de BRONZE et l'écriture dans GOLD sont refusées.
-- **Secrets :** clés RSA Snowflake et identifiants Google montés en lecture seule au moment du run, jamais dans l'image ni dans Git. Aucune clé de compte de service n'existe.
-- **Données personnelles :** pseudos hachés en SHA-256 dès silver. C'est une pseudonymisation, pas une anonymisation. Les écoutes invalides partent en quarantaine, avec leur raison.
-- **Coût du prototype, du 1er au 4 novembre :** 1,86 crédit Snowflake, soit environ 5,59 $, et 0,00 € sur GCP. Le bucket fait 48 Mo. Projection sur un an : moins de 300 $, une borne haute.
-- **Garde-fous :** une alerte budget GCP, un moniteur Snowflake de 10 crédits par mois qui suspend le warehouse, et une procédure d'arrêt dans le [runbook](docs/runbook.md).
+- **Least privilege, verified:** allowed and denied access were tested for each case. A reader cannot upload to the bucket. The Dash role only reads GOLD: reading BRONZE and writing to GOLD are denied.
+- **Secrets:** Snowflake RSA keys and Google credentials are mounted read-only at run time, never in the image or in Git. No service account key exists.
+- **Personal data:** usernames are hashed with SHA-256 from silver onwards. This is pseudonymisation, not anonymisation. Invalid listens go to quarantine, with their reason.
+- **Prototype cost, November 1 to 4:** 1.86 Snowflake credits, about $5.59, and €0.00 on GCP. The bucket holds 48 MB. One-year projection: under $300, an upper bound.
+- **Safeguards:** a GCP budget alert, a Snowflake monitor of 10 credits per month that suspends the warehouse, and a shutdown procedure in the [runbook](docs/runbook.md).
 
-## Preuves
+## Evidence
 
-| Preuve | Fichier |
+| Evidence | File |
 |---|---|
-| Run Airflow de production, incident JWT, contrôles Snowflake | [docs/evidence/2026-11-03_airflow_run.md](docs/evidence/2026-11-03_airflow_run.md) |
-| Rejeu de deux semaines et de trois sources | [docs/evidence/](docs/evidence/) (`*_replay.json`, captures) |
-| Terraform, incident 412, piège du bucket recréé | [docs/evidence/2026-11-02_terraform_gcs.md](docs/evidence/2026-11-02_terraform_gcs.md) |
-| Ingestion dans Docker, données tardives | [docs/evidence/2026-11-02_docker_ingestion.md](docs/evidence/2026-11-02_docker_ingestion.md) |
-| Builds dbt, échec démontré, lignage, coûts Snowflake | [dbt/evidence/](dbt/evidence/) |
-| Accès refusés, captures de Dash | [dashboard/evidence/](dashboard/evidence/) |
-| Coûts GCP, alerte budget | [docs/evidence/](docs/evidence/) (`*_gcp_*.png`) |
+| Production Airflow run, JWT incident, Snowflake checks | [docs/evidence/2026-11-03_airflow_run.md](docs/evidence/2026-11-03_airflow_run.md) |
+| Replay of two weeks and three sources | [docs/evidence/](docs/evidence/) (`*_replay.json`, screenshots) |
+| Terraform, error 412, the recreated-bucket pitfall | [docs/evidence/2026-11-02_terraform_gcs.md](docs/evidence/2026-11-02_terraform_gcs.md) |
+| Ingestion in Docker, late data | [docs/evidence/2026-11-02_docker_ingestion.md](docs/evidence/2026-11-02_docker_ingestion.md) |
+| dbt builds, demonstrated failure, lineage, Snowflake costs | [dbt/evidence/](dbt/evidence/) |
+| Denied access, Dash screenshots | [dashboard/evidence/](dashboard/evidence/) |
+| GCP costs, budget alert | [docs/evidence/](docs/evidence/) (`*_gcp_*.png`) |
 
-La vidéo du pipeline est distribuée en dehors du dépôt.
+The pipeline video is distributed outside the repository.
 
-## Limites
+## Limits
 
-- **Échantillon :** 25 auditeurs et 2 semaines, trop peu pour battre la popularité.
-- **Public non représentatif :** les utilisateurs de ListenBrainz ne reflètent pas tous les auditeurs. On ne connaît ni leur pays ni leur abonnement.
-- **Évaluation hors ligne :** aucun vrai retour sur les recommandations.
-- **Région et déploiement :** les données sont aux États-Unis, et l'app Dash tourne en local.
-- **Chiffres économiques :** ce sont des hypothèses, détaillées dans le [dossier métier](docs/business.md).
+- **Sample:** 25 users and 2 weeks, too few to beat popularity.
+- **Unrepresentative audience:** ListenBrainz users do not reflect all listeners. Their country and subscription are unknown.
+- **Offline evaluation:** no real feedback on the recommendations.
+- **Region and deployment:** the data is in the United States, and the Dash app runs locally.
+- **Business figures:** they are assumptions, detailed in the [business case](docs/business.md).
 
-## Licences des données
+## Data licences
 
-Seules des données publiques sont utilisées : MusicBrainz est limité à sa partie CC0, et Wikidata est en CC0. La licence des écoutes ListenBrainz et celle des pages vues Wikipédia sont à confirmer sur leurs pages officielles.
+Only public data is used: MusicBrainz is limited to its CC0 part, and Wikidata is CC0. The licences of ListenBrainz
+listens and of Wikipedia pageviews are still to be confirmed on their official pages.

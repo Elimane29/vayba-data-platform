@@ -40,3 +40,8 @@ export SNOWFLAKE_ROLE=VAYBA_ELIMANE
 export SNOWFLAKE_WAREHOUSE=VAYBA_WH
 dbt build --project-dir dbt --profiles-dir dbt --target prod --vars '{"history_start":"2026-10-19","week_start":"2026-10-26","test_end":"2026-11-02"}'
 ```
+
+
+Révision du 4 novembre 2026 : neighbors choisit comme raison l'artiste commun le plus écouté par l'auditeur dans son historique avant la semaine cible. En cas d'égalité, les écoutes du voisin puis l'identifiant MusicBrainz départagent les candidats de façon stable. La similarité de Jaccard et le classement des recommandations restent inchangés.
+
+Le test calculé à la main couvre le choix de l'artiste, le sens de la relation entre auditeurs et les égalités. Le build Snowflake dans DEV_HUGO_REASONS passe avec 28 résultats sans erreur. La comparaison avec la version validée de PR #11 confirme 250 recommandations identiques pour les artistes, morceaux, positions et scores ; seules 153 raisons changent. Toutes les métriques sont inchangées. Une même raison peut encore apparaître plusieurs fois lorsqu'un artiste domine l'historique commun. Le correctif ne force pas la diversité des explications. Aucun nouveau run de production Airflow n'est revendiqué pour cette correction.

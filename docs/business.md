@@ -9,17 +9,20 @@ that we state as such. Nothing here is a real company figure.
 
 ## 1. Business model
 
-**Open decision (AGENTS.md):** B2B, recommended, or B2C. Both are written down so the team can choose; the use case
-sheet in section 3 is the same in both cases.
+**Selected model: B2C.** Vayba serves listeners directly through a free tier and a premium subscription.
+The audience, conversion and price below form a fictional scenario, not measured commercial performance.
 
-| | B2B (recommended) | B2C |
+| Item | B2C scenario | Status |
 |---|---|---|
-| Customer | Small music apps and web radios that have listeners but no recommendation team | Listeners |
-| Offer | White-label "New Vibes" playlist for each of their users, delivered weekly | Free tier + premium subscription |
-| Revenue (assumption) | H1: €0.05 per monthly active user per month | H1': premium €9.99 per month, 5 % of users convert |
-| Size at launch (assumption) | H2: 10 partner apps × 10,000 users = 100,000 users | H2': 100,000 users |
-| Monthly revenue | 100,000 × €0.05 = **€5,000** | 100,000 × 5 % × €9.99 = **€49,950** |
-| Why | Fewer customers, no consumer marketing, the data product *is* what is sold | Bigger revenue, but a consumer app to build and market |
+| Customer | Listeners using Vayba directly | Selected target |
+| Offer | Free tier plus a premium subscription, with weekly discovery playlists | Product scenario |
+| Premium price | €9.99 per month | H1: assumed price |
+| Audience | 100,000 listeners | H2: assumed monthly audience |
+| Premium conversion | 5%, or 5,000 paying subscribers | H3: assumed conversion |
+| Monthly revenue | 100,000 × 5% × €9.99 = **approximately €49,950 per month** | Scenario arithmetic; not profit or proven revenue |
+
+Acquisition by a large group is a **possible exit hypothesis**, contingent on interest from a buyer and
+the development of the business. It is not an operating plan, a promised transaction or an assumed valuation.
 
 ## 2. Stakeholders and constraints
 
@@ -27,7 +30,7 @@ sheet in section 3 is the same in both cases.
 |---|---|---|
 | Listener | Discover artists they like | Their playlist (Dash, view "playlist") |
 | Head of product | Decide whether co-listening is worth it compared with a simple popularity list | `METRICS_HEBDO` (Dash, view "metrics") |
-| Partner app (B2B) | Engagement of its users, a weekly delivery it can rely on | Playlists by Monday 08:00 |
+| Premium subscriber (B2C) | A service worth renewing each month | A weekly discovery playlist, ready by Monday 08:00 |
 | Data team | A pipeline that can be rerun and explained | Yanis: ingestion · Hugo: dbt, tests, app · Elimane: Airflow, Terraform, incidents |
 | DPO | Listening history is personal data (GDPR) | User names hashed from silver onwards, only `GOLD` exposed |
 
@@ -37,7 +40,7 @@ sheet in section 3 is the same in both cases.
 | Raw size of one listen | about 1.2 KB | **measured**: 1,183 bytes on average, same week |
 | Bronze growth at launch | 100,000 × 320 × 1.2 KB ≈ **38 GB per week** | computed from H2 and the two lines above |
 | Listens without a MusicBrainz id | about 12 % | **measured**: 964 of 8,001, same week |
-| Freshness | Playlist ready Monday 08:00 Europe/Paris, built from listens up to Sunday 23:59:59 UTC | H3 |
+| Freshness | Playlist ready Monday 08:00 Europe/Paris, built from listens up to Sunday 23:59:59 UTC | Product service target, not yet a measured SLA |
 | Playlist size | 10 distinct artists, one representative recording per artist | Agreed prototype convention; `playlist_size=10` |
 | MusicBrainz API | 1 request per second | MusicBrainz rate-limiting rules |
 | Latency needed | one week: a **weekly batch**, no streaming | product definition |
@@ -123,7 +126,7 @@ has never heard in their lifetime.
 
 A2-A4 were not established by this first single-week ingestion proof. A valid S+1 evaluation needs training
 data before the target week and a complete evaluation week; the later measurements are described below.
-The team still needs to confirm the commercial choice and API-versus-dump decision. Hashing user names from silver
+The commercial model is now B2C; the team still needs to confirm the API-versus-dump decision. Hashing user names from silver
 pseudonymizes identifiers; it does not by itself guarantee anonymity.
 
 ### Two-week extension and measured local S+1 result
@@ -158,3 +161,10 @@ The latter distinguishes a successful development dbt build from publication of 
 shared GOLD; that publication is not a new complete production dbt/Airflow run. Its incident proof concerns
 isolated `DEV_HUGO_INCIDENT_*` schemas. The complete Airflow replay still requires operations validation.
 These are Hugo's recorded executions, reviewed for this document; they were not rerun by Yanis.
+
+### Team status reported on November 4
+
+Elimane reports a successful production run and replay: 16,447 listens, zero duplicates, `PASS=26`,
+with denied-access checks demonstrated. This updates the earlier pending-operations status above.
+The earlier dated measurements remain records of their respective runs and model versions; this team
+update does not establish that every later Wikipedia model was included in that full production run.

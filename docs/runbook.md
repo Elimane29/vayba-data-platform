@@ -70,8 +70,11 @@ rows in one transaction; `COPY INTO` skips files it already loaded. Silver dedup
 
 | Run | Listens in bronze | Duplicates | Playlist rows | Date |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 (replay) | | | | |
+| 1, `scheduled__2026-11-02T05:00:00+00:00` | 16,447 (8,003 for the week) | 0 | 250 | 2026-11-03 |
+| 2 (replay), `manual__2026-11-03T19:57:29.316849+00:00` | 16,447 (8,003 for the week) | 0 | 250 | 2026-11-03 |
+
+Result: identical counts after the replay. The week's rows now carry the replay run id: the week was replaced, not
+added. Silver stays at 14,472 listens; metrics unchanged (hit rate 0.48, baseline 0.56). dbt passed both times.
 
 Note: counts can legitimately grow between two runs hours apart, because late listens reach ListenBrainz
 (8,001 then 8,003 listens for the same week on 2026-11-02). Replay right after the first run to compare.
@@ -172,9 +175,9 @@ GCP: Billing → Reports, filtered on the project.
 
 | Item | Driver | Prototype (measured) | Assumption for the projection |
 |---|---|---|---|
-| Snowflake compute | XSMALL warehouse, 1 credit per running hour, auto-suspend 60 s | | weekly run length × 52 |
+| Snowflake compute | XSMALL warehouse, 1 credit per running hour, auto-suspend 60 s | 1.861716116 credits on `VAYBA_WH` from 2026-11-01 to 2026-11-04 15:43 UTC (development included), × 3.00 USD per credit (Enterprise) ≈ 5.59 USD gross, not an invoice | weekly run length × 52 |
 | Snowflake storage | bronze + silver + gold size | | grows with listens kept |
-| GCS storage | files kept 30 days (lifecycle rule) | | weekly volume × 4 |
+| GCS storage | files kept 30 days (lifecycle rule) | 48,180,469 bytes (≈ 48 MB) for 2 weeks, 2026-11-04; GCP bill 0.00 € for Nov 1–4 | weekly volume × 4 |
 | GCS to Snowflake transfer | GCP to AWS, both in Oregon: cross-cloud, same area | | weekly volume read once |
 
 Fill the projection with real numbers from one weekly run; state every assumption on the slide.
